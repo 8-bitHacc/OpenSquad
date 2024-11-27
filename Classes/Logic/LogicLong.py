@@ -40,3 +40,13 @@ class LogicLong:
     def isZero(self):
         if not self.lowID: return self.highID == 0
         else: return False
+
+    @classmethod
+    def toLong(cls, high: int, low: int):
+        """
+        Converts two integers (HighID and LowID) into a long.
+        """
+        lowerInt = low & 0x7FFFFFFF
+        if low < 0:
+            lowerInt = low | 0x80000000
+        return lowerInt | high << 32

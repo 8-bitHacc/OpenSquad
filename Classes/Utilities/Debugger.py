@@ -12,6 +12,10 @@ class Debugger:
         elif logtype.lower() == "info": colorCode = cls.CYAN
         print(f"{colorCode}[{logtype.upper()}] {text}{cls.RESET}")
 
-    @staticmethod
-    def convertValueIntoHex(value: int):
-        return hex(value)
+    @classmethod
+    def error(cls, text: str):
+        print(f"{cls.RED}[ERROR] {text}{cls.RESET}")
+
+    @classmethod
+    def warn(cls, text: str):
+        print(f"{cls.RED}[ERROR] {text}{cls.RESET}")

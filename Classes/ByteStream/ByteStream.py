@@ -365,6 +365,9 @@ class ByteStream(ChecksumEncoder):
         result += (self.payload[self.offset + 3])
         self.offset += 4
         return result
+
+    def readInt8(self):
+        return self.readInt()
     
     def readIntLittleEndian(self):
         self.bitoffset = 0
