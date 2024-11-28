@@ -40,7 +40,7 @@ class LogicRawOutReflector(LogicReflector):
             self.byteStream.writeBoolean(False)
         else:
             self.byteStream.writeBoolean(True)
-            self.byteStream.writeLongLong(LogicLong.toLong(highInt, lowInt))
+            self.byteStream.writeLongLong(highInt, LogicLong.toLong(highInt, lowInt))
 
     def reflectString(self, value: str, objectName: str, a5: str):
         if value == a5:

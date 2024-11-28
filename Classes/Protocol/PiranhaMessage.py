@@ -3,16 +3,16 @@ from Classes.ByteStream.ByteStream import ByteStream
 
 class PiranhaMessage(ByteStream):
     def __init__(self, payload = b""):
-        """Initializes the Packet's Base Data"""
+        """Initializes the Packet's default data"""
         super().__init__(payload)
         self.packetVersion = 0
 
-    def decode(self, receiverDict): #Dict[Connection, PlayerInstance]):
+    def decode(self, receiverDict: dict): #Dict[Connection, PlayerInstance]):
         """
         Data sent by a ClientMessage, to read the data, provide the structure
 
         Parameters:
-            receiverDict (Dict): Dict[Connection, PlayerInstance])
+            receiverDict (dict): A dict containing data about the client connection
         """
         pass
 
@@ -53,3 +53,7 @@ class PiranhaMessage(ByteStream):
         self.packetVersion = 0
         self.offset = 0
         self.bitoffset = 0
+
+    def reflect(self, reflector, receiver):
+        """Encodes the message's payload using Reflector"""
+        pass

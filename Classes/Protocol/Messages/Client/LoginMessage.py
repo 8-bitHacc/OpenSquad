@@ -6,9 +6,6 @@ class LoginMessage(PiranhaMessage):
     def __init__(self, payload):
         super().__init__(payload)
 
-    def decode(self, receiver):
-        pass
-
     def execute(self, receiver):
         ok = LoginOkMessage()
         ohd = OwnHomeDataMessage()

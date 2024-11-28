@@ -221,7 +221,7 @@ class ByteStream(ChecksumEncoder):
         
     # TODO: writeLongLong
     def writeLongLong(self, high, low):
-        super().writeLongLong(high, low)
+        #super().writeLongLong(high, low)
         logicLong = LogicLong(high, low)
 
         self.writeIntToByteArray(logicLong.getHigherInt())
