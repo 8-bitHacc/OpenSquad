@@ -4,8 +4,9 @@ from Classes.Utilities.Utility import Utility
 class LogicLaserMessageFactory:
     PacketIDs = {
         24124: "TeamMessage",
+        27475: "EndClientTurnHandledMessage",
         13493: "GoHomeMessage",
-        20104: "LoginOkMessage",
+        29125: "LoginOkMessage",
         24758: "ApiTokenMessage",
         14359: "TeamChatMessage",
         14351: "TeamJoinMessage",
@@ -38,7 +39,7 @@ class LogicLaserMessageFactory:
         16939: "AllianceWarMessage",
         30000: "AttributionMessage",
         10100: "ClientHelloMessage",
-        10555: "ClientInputMessage",
+        18853: "ClientInputMessage",
         29997: "CryptoErrorMessage",
         24403: "LeaderboardMessage",
         24101: "OwnHomeDataMessage",
@@ -63,7 +64,7 @@ class LogicLaserMessageFactory:
         24364: "AllianceTeamsMessage",
         10110: "AnalyticEventMessage",
         10103: "CreateAccountMessage",
-        14102: "EndClientTurnMessage",
+        16543: "EndClientTurnMessage",
         12102: "GetPlayerMapsMessage",
         14308: "LeaveAllianceMessage",
         23774: "PlayerJWTokenMessage",

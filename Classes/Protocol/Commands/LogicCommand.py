@@ -1,4 +1,6 @@
 from Classes.ByteStream.ByteStream import ByteStream
+from Classes.Logic.Reflector.LogicRawInReflector import LogicRawInReflector
+
 
 class LogicCommand(ByteStream):
     def __init__(self, payload):
@@ -8,9 +10,7 @@ class LogicCommand(ByteStream):
         self.accountID = [0, 0]
 
     def decode(self, byteStream):
-        self.tick = byteStream.readVInt()
-        self.executionTick = byteStream.readVInt()
-        self.accountID = byteStream.readLogicLong()
+        self.reflect(byteStream)
 
     def encode(self, receiver):
         self.writeVInt(0)
@@ -26,32 +26,10 @@ class LogicCommand(ByteStream):
         self.messageLength = 0
         self.offset = 0
         self.bitoffset = 0
-    
-    def setOffset(self, off: int):
-        '''
-        Sets the offset of the command's ByteStream instance to the specified value.
-    
-        Parameters:
-            off (int): The new offset value to be set.
-        '''
-        self.offset = off
-    
-    def setBitoffset(self, bit: int):
-        '''
-        Sets the bitoffset of the command's ByteStream instance to the specified value.
-    
-        Parameters:
-            bit (int): The new bitoffset value to be set.
-        '''
-        self.bitoffset = bit
-    
-    def setData(self, off: int, bit: int):
-        '''
-        Sets the offset and bitoffset of the command's ByteStream instance to the specified values.
-    
-        Parameters:
-            off (int): The new offset value to be set.
-            bit (int): The new bitoffset value to be set.
-        '''
-        self.offset = off
-        self.bitoffset = bit
+
+    def reflect(self, byteStream):
+        rawIn = LogicRawInReflector(byteStream)
+        self.tick = rawIn.reflectInt(0, "t", 0)
+        self.executionTick = rawIn.reflectInt(0, "g", 0)
+        self.accountID = rawIn.reflectLong(0, 0, 1, "aid", 0)
+        print(self.tick, self.executionTick, self.accountID)

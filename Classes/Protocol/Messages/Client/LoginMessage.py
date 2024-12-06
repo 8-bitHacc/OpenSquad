@@ -1,6 +1,6 @@
 from Classes.Protocol.PiranhaMessage import PiranhaMessage
 from Classes.Protocol.Messages.Server.LoginOkMessage import LoginOkMessage
-from Classes.Protocol.Messages.Server.OwnHomeDataHexMessage import OwnHomeDataMessage
+from Classes.Protocol.Messages.Server.OwnHomeDataMessage import OwnHomeDataMessage
 
 class LoginMessage(PiranhaMessage):
     def __init__(self, payload):
