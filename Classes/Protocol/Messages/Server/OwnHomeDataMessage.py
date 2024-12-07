@@ -20,12 +20,17 @@ class OwnHomeDataMessage(PiranhaMessage):
         # self.writeInt(json.__len__()) # relfected json length!!
         self.writeString(jsonRefl)
 
-        self.writeLong(0, 1)
-        self.writeLong(0, 1)
-
-        base2 = b'\x01\x00\x00\x00\x00\x00\x00;t\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x058Hacc\x00\x00\x00\x00\x00\x00\x00\x00\x00\xa4\x01\x9f\x9a\x0c\x00\x00\x00\x00\x00\x9e\x9a\x0c\x00\x9d\x9a\x0c\x03\x02\x00\xa1\xcf$\x01\xa0\x84=\x00\xa4\xcf$\x01\x9f\x9a\x0c\x00\x02\x00\x82\xea0\x01\x01\x00\x84\xea0\x01\xa8\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+        # dont know what that is
+        base2 = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01'
         self.payload += base2
         self.offset += len(base2)
+
+        self.writeLong(0, 1)
+        self.writeLong(0, 1)
+        self.writeStringReference("8Hacc")
+        clientAvatar = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\xa4\x01\x9f\x9a\x0c\x00\x00\x00\x00\x00\x9e\x9a\x0c\x00\x9d\x9a\x0c\x03\x02\x00\xa1\xcf$\x01\xa0\x84=\x00\xa4\xcf$\x01\x9f\x9a\x0c\x00\x02\x00\x82\xea0\x01\x01\x00\x84\xea0\x01\xa8\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+        self.payload += clientAvatar
+        self.offset += len(clientAvatar)
 
     def getMessageType(self):
         return 24548
@@ -180,24 +185,10 @@ class OwnHomeDataMessage(PiranhaMessage):
     4700002,
     4700003
   ],
+  "exp_league_premium": [],
   "ver": 5,
   "gemRew": [
-    6200000,
-    6200002,
-    6200000,
-    6200002,
-    6200002,
-    6200000,
-    6200008,
-    6200000,
-    6200008,
-    6200001,
-    6200003,
-    6200001,
-    6200003,
-    6200001,
-    6200003,
-    6200001
+    6200000
   ],
   "gemT": {
     "t": 10
@@ -206,11 +197,14 @@ class OwnHomeDataMessage(PiranhaMessage):
     "t": 10
   },
   "lootLimitUnused": 20000,
+  "gemRewardTokenSequence": 100,
   "plazaRewardT": {
-    "t": 20
+    "t": 20,
+    "p": true
   },
   "plazaChestT": {
-    "t": 20
+    "t": 69746,
+    "p": true
   },
   "chars": {
     "c": [
