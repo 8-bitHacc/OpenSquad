@@ -15,6 +15,7 @@ const malloc = new NativeFunction(libc.findExportByName('malloc'), 'pointer', ['
 const androidWrite = new NativeFunction(Module.getExportByName(null, '__android_log_write'), 'int', ['int', 'pointer', 'pointer']);
 const debugCtor = new NativeFunction(base.add(0x8AE8E4), "pointer", ["pointer"]);
 const stageAddChild = new NativeFunction(base.add(0xA5C39C), "void", ["pointer", "pointer"]);
+const debugMenuUpdate = new NativeFunction(base.add(0x5F5E58), "pointer", ["int", "float"])
 const debugCtorAlloc = malloc(1000); // allocate memory
 
 function patch(start, end) {
@@ -64,6 +65,13 @@ patchRet(0x71F878);
 patchRet(0x71DE00);
 patchRet(0x5F90C8);
 
+Process.setExceptionHandler(function (details) {
+    debugLog(details.type);
+    debugLog(details.address.sub(base));
+    debugLog(details.memory.address.sub(base));
+    return false;
+})
+
 Interceptor.attach(libc.findExportByName("getaddrinfo"), {
     onEnter(args) {
         if (args[1].readUtf8String() == "9339") {
@@ -99,6 +107,6 @@ const addDebug = Interceptor.attach(base.add(0x424C58), {
 
 Interceptor.attach(libc.findExportByName("pthread_cond_signal"), {
 	onEnter: function(args) {
-		// TODO: find debugmenu::update
+		debugMenuUpdate(debugCtorAlloc, 0);
 	}
 });
