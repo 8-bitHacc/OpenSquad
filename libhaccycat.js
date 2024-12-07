@@ -1,4 +1,4 @@
-console.log("hi from frida!");
+console.log("hi from frida! shei, if you can make this use listen because this doesnt work for me, it would be very helpful");
 
 function log(a) {
     var f = new File('/sdcard/scripts/logs.txt', 'a')
@@ -15,8 +15,13 @@ const malloc = new NativeFunction(libc.findExportByName('malloc'), 'pointer', ['
 const androidWrite = new NativeFunction(Module.getExportByName(null, '__android_log_write'), 'int', ['int', 'pointer', 'pointer']);
 const debugCtor = new NativeFunction(base.add(0x8AE8E4), "pointer", ["pointer"]);
 const stageAddChild = new NativeFunction(base.add(0xA5C39C), "void", ["pointer", "pointer"]);
-const debugMenuUpdate = new NativeFunction(base.add(0x5F5E58), "pointer", ["int", "float"])
-const debugCtorAlloc = malloc(1000); // allocate memory
+const debugMenuUpdate = new NativeFunction(base.add(0x5F5E58), "pointer", ["int", "float"]);
+const resourceListenerAddFileAddress = base.add(0x60580C);
+const resourceListenerAddFile = new NativeFunction(resourceListenerAddFileAddress, "pointer", ["pointer", "pointer", "int", "int", "int", "int", "int"]); // Last one is a boolean but we use int
+const debugCtorAlloc = malloc(3000); // allocate memory
+// thingy by sb
+const isHomeState = new NativeFunction(base.add(0x861618), 'int', ['pointer'])
+const idk = () => base.add(0x12DB908).readPointer();
 
 function patch(start, end) {
     Memory.patchCode(base.add(start), Process.pageSize, code => {
@@ -65,13 +70,6 @@ patchRet(0x71F878);
 patchRet(0x71DE00);
 patchRet(0x5F90C8);
 
-Process.setExceptionHandler(function (details) {
-    debugLog(details.type);
-    debugLog(details.address.sub(base));
-    debugLog(details.memory.address.sub(base));
-    return false;
-})
-
 Interceptor.attach(libc.findExportByName("getaddrinfo"), {
     onEnter(args) {
         if (args[1].readUtf8String() == "9339") {
@@ -95,18 +93,23 @@ Interceptor.attach(base.add(0xAD8378), {
         debugLog(`[Debugger::ERROR] ${args[0].readUtf8String()}`);
     }
 });
-// 0x424C58 = LoadingScreen::update
-const addDebug = Interceptor.attach(base.add(0x424C58), {
-    onLeave(args) {
-        debugLog("debug");
-        debugCtor(debugCtorAlloc);
-        stageAddChild(base.add(0x12E8D58).readPointer(), debugCtorAlloc);
+
+const addDebug = Interceptor.attach(resourceListenerAddFile, {
+    onEnter(args) {
+        resourceListenerAddFile(args[0], "sc/debug.sc", -1, -1, -1, -1, 0);
         addDebug.detach();
     }
-})
+});
 
-Interceptor.attach(libc.findExportByName("pthread_cond_signal"), {
-	onEnter: function(args) {
-		debugMenuUpdate(debugCtorAlloc, 0);
-	}
+// 0x424C58 = LoadingScreen::update, below is thingy by sb
+const DebugLoader = Interceptor.attach(libc.findExportByName("epoll_wait"), {
+    onEnter(args) {
+        if (isHomeState(idk())) {
+            debugCtor(debugCtorAlloc);
+            stageAddChild(base.add(0x12E8D58), debugCtorAlloc);
+            debugCtorAlloc.add(32).writeFloat(1200);
+            debugLog("debug loaded");
+            DebugLoader.detach();
+        }
+    }
 });
