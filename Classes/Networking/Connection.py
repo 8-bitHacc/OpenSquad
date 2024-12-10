@@ -5,9 +5,9 @@ from Classes.Messaging import Messaging
 
 from Classes.Instances.PlayerInstance import PlayerInstance
 from Classes.Messaging import Messaging
+from Classes.Protocol.LogicLaserMessageFactory import LogicLaserMessageFactory
 from Classes.Utilities.ClientManager import ClientManager
 from Classes.MessageManager import MessageManager
-from Classes.Utilities.Preloader import Preloader
 
 class Connection(Thread):
     def __init__(self, serverSocket: socket, address, server):
@@ -46,6 +46,7 @@ class Connection(Thread):
                     self.PacketTimeout = time.time()
 
                     PacketID: int = Header[0]
+
                     PacketLength: int = Header[1]
                     PacketPayload: Union[bytes, bytearray] = self.recv(PacketLength)
                     PacketPayload = self.messaging.PepperCrypto.decrypt(PacketID, bytes(PacketPayload))

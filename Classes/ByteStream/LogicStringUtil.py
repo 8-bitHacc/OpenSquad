@@ -8,4 +8,5 @@ class LogicStringUtil:
 
     @staticmethod
     def getBytes(a2: str):
+        if not isinstance(a2, str): return b""
         return a2.encode()

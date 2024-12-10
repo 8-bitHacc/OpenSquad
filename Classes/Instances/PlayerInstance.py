@@ -9,14 +9,19 @@ class PlayerInstance:
     SessionKey = ""
 
     # Main Player Items
-    Name = "Brawler"
+    Name = "8Hacc"
     Registered = False
-    Trophies = 0
-    HighTrophies = 0
-    ProfileIcon = 0
-    NameColor = 0
-    TrophyRewardsClaimed = 1
-    ExperiencePoints = 0
+    UnlockedCharacters = [
+        {
+            "id": 0,
+        },
+        {
+            "id": 2,
+        },
+        {
+            "id": 4,
+        }
+    ]
 
     def getPlayerID(self) -> list:
         return [self.HighID, self.LowID]

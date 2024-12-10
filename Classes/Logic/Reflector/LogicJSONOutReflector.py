@@ -39,12 +39,23 @@ class LogicJSONOutReflector(LogicReflector):
     def reflectExitObject(self):
         self.endObject()
 
-    def reflectInt(self, value: int, objectName: str, a4: int):
-        if self.currentObject is None:
-            Debugger.error("LogicJSONOutReflector: no object exists")
-            if value == a4: return
+    def reflectInt(self, value: int, objectName: str, a4: int, endArray: bool = False):
+        #if self.currentObject is None or self.currentArray is None:
+            #Debugger.error("LogicJSONOutReflector: no object exists")
+
+        if value == a4:
+            if endArray:
+                del self.currentArray[self.currentArrayIndex]
+                if not self.currentArrayIndex == 0: self.currentArrayIndex -= 1
+
+            return
+
         if value != a4:
-            self.currentObject[objectName] = value
+            if self.currentArray is None: self.currentObject[objectName] = value
+            else:
+                self.currentArray[self.currentArrayIndex][objectName] = value
+
+        if endArray: self.currentArrayIndex += 1
 
     def reflectBool(self, value: bool, objectName: str, a4: bool):
         if self.currentObject is None: Debugger.error("LogicJSONOutReflector: no object exists")
@@ -69,25 +80,26 @@ class LogicJSONOutReflector(LogicReflector):
         self.currentObject[objectName] = seed
 
     def reflectIntArray(self, values: list, objectName: str):
-        self.beginArray(objectName)
+        self.beginArray(objectName, 0)
         for value in values:
             self.reflectNextInt(value)
         self.endArray()
 
-    def reflectArray(self, length: int, objectName: str) -> int:
+    def reflectArray(self, length: int, objectName: str, dictDisabled: bool = True) -> int:
         if length >= 1:
-            self.beginArray(objectName)
+            self.beginArray(objectName, length if not dictDisabled else 0)
         return length
 
     def reflectExitArray(self):
         self.endArray()
 
-    def reflectNextInt(self, value: int):
-        if self.currentArray is None: Debugger.error("LogicJSONOutReflector: no object exists")
-        self.currentArray.append(value)
+    def reflectNextInt(self, value: int | list):
+        if self.currentArray is None: Debugger.error("LogicJSONOutReflector: no array exists")
+        if isinstance(value, int): self.currentArray.append(value)
+        elif isinstance(value, list): self.currentArray.extend(value)
 
     def reflectNextBool(self, value: bool):
-        if self.currentArray is None: Debugger.error("LogicJSONOutReflector: no object exists")
+        if self.currentArray is None: Debugger.error("LogicJSONOutReflector: no array exists")
         self.currentArray.append(value)
 
     def beginObject(self, objectName: str):
@@ -122,14 +134,16 @@ class LogicJSONOutReflector(LogicReflector):
         else:
             Debugger.error("LogicJSONOutReflector - Unsupported object type in stack")
 
-    def beginArray(self, objectName: str):
+    def beginArray(self, objectName: str, length: int):
         jsonArray: list = []
+        for x in range(length): jsonArray.append({})
         if self.currentObject is not None:
             self.currentObject[objectName] = jsonArray
         else:
             self.currentArray.append(jsonArray)
         self.pushStack()
         self.currentArray = jsonArray
+        self.currentArrayIndex = 0
 
     def endArray(self):
         if self.currentArray is None: Debugger.error("endArray called while no current array exists")
@@ -158,6 +172,31 @@ class LogicJSONOutReflector(LogicReflector):
             Debugger.error("LogicJSONOutReflector: no object exists")
         if value != a4:
             self.currentObject[objectName] = value
+
+    def addObject(self, objectName: str = "newObject"):
+        if self.currentArray is None: Debugger.error("LogicJSONOutReflector: no array exists")
+        elif objectName in self.currentArray: Debugger.warning(f"LogicJSONOutReflector::addObject: object {objectName} is already in the current array!")
+        self.beginObject(objectName)
+
+    def addString(self, value: str):
+        if self.currentArray is None: Debugger.error("LogicJSONOutReflector: no array exists")
+        elif value in self.currentArray: Debugger.warning(f"LogicJSONOutReflector::addString: {value} is already in the current array!")
+        self.currentArray.append(value)
+
+    def addInt(self, value: int | list):
+        if self.currentArray is None: Debugger.error("LogicJSONOutReflector: no array exists")
+        elif value in self.currentArray: Debugger.warning(f"LogicJSONOutReflector::addInt: {value} is already in the current array!")
+        self.currentArray.append(value if isinstance(value, int) else x for x in value)
+
+    def addBool(self, value: bool):
+        if self.currentArray is None: Debugger.error("LogicJSONOutReflector: no array exists")
+        elif value in self.currentArray: Debugger.warning(f"LogicJSONOutReflector::addBool: {value} is already in the current array!")
+        self.currentArray.append(value)
+
+    def addFloat(self, value: float):
+        if self.currentArray is None: Debugger.error("LogicJSONOutReflector: no array exists")
+        elif value in self.currentArray: Debugger.warning(f"LogicJSONOutReflector::addFloat: {value} is already in the current array!")
+        self.currentArray.append(int(value)) # SLODWORD does float to int
 
     def pushStack(self):
         jsonRoot: any = self.currentObject

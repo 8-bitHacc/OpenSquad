@@ -410,7 +410,8 @@ class ByteStream(ChecksumEncoder):
         self.bitoffset = 0
         if (length & 0x80000000) != 0:
             if length != -1:
-                Debugger.log("warning", "Negative readBytes length encountered.")
+                pass
+                #Debugger.log("warning", "Negative readBytes length encountered.")
         elif length <= max:
             result = self.payload[self.offset:self.offset + length]
             self.offset += length

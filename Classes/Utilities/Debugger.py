@@ -17,5 +17,5 @@ class Debugger:
         print(f"{cls.RED}[ERROR] {text}{cls.RESET}")
 
     @classmethod
-    def warn(cls, text: str):
-        print(f"{cls.RED}[ERROR] {text}{cls.RESET}")
+    def warning(cls, text: str):
+        print(f"{cls.YELLOW}[WARNING] {text}{cls.RESET}")

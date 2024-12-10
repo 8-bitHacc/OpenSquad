@@ -24,10 +24,9 @@ class EndClientTurnMessage(PiranhaMessage):
         for x in range(self.commandsCount):
             print(f"received commandId: {self.readVInt()}")
             commandDecode = LogicRawInReflector(self)
-            print(commandDecode.reflectInt(0, "", 0))
-            print(commandDecode.reflectInt(0, "", 0))
-            print(commandDecode.reflectLong(0, 0, 0, "", 0))
-            print(commandDecode.reflectInt(0, 0, 0))
+            print(commandDecode.reflectLong(0, 0, 0, "t", 0))
+            print(commandDecode.reflectLong(0, 0, 0,"g", 0))
+            print(commandDecode.reflectLong(0, 0, 0, "aid", 0))
 
     def getMessageType(self):
         return 16543
