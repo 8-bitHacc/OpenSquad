@@ -1,8 +1,11 @@
 import time
 
+from Classes.Instances.PlayerInstance import PlayerInstance
 from Classes.Logic.LogicRandom import LogicRandom
 from Classes.Logic.Reflectable.LogicCharacterEntry import LogicCharacterEntry
+from Classes.Logic.Reflectable.LogicShopEntry import LogicShopEntry
 from Classes.Logic.Reflector.LogicJSONOutReflector import LogicJSONOutReflector
+from Classes.Logic.Reflector.LogicRawOutReflector import LogicRawOutReflector
 from Classes.Protocol.PiranhaMessage import PiranhaMessage
 import json, random
 
@@ -310,32 +313,10 @@ class OwnHomeDataMessage(PiranhaMessage):
   "pProg": 5,
   "sEvent": 2
 }'''
-    def reflectJSON(self, receiver):
+    def reflectJSON(self, player: PlayerInstance):
         reflected = LogicJSONOutReflector({}) # Start off with base data
 
-        reflected.reflectObject("shop")
-        # Shop
-        reflected.reflectInt(0, "id", 0)
-
-        if reflected.reflectArray(0, "special") != 0:
-            reflected.reflectExitArray()
-
-        if reflected.reflectArray(0, "i") != 0:
-            reflected.reflectExitArray()
-
-        if reflected.reflectArray(0, "e") != 0:
-            reflected.reflectExitArray()
-
-        if reflected.reflectArray(0, "s") != 0:
-            reflected.reflectExitArray()
-
-        reflected.reflectObject("t")
-        reflected.reflectInt(1000, "t", 0)
-        reflected.reflectBool(False, "p", False)
-        reflected.reflectExitObject()
-
-        reflected.reflectExitObject()
-        # Shop
+        LogicShopEntry.reflect(reflected)
 
         # EventManager
         reflected.reflectObject("eventManager")
@@ -346,9 +327,10 @@ class OwnHomeDataMessage(PiranhaMessage):
 
         reflected.reflectInt(33517122184, "tick", 0)
         reflected.reflectInt(33517115968, "globalTick", 0)
-        reflected.reflectRandom(LogicRandom(random.randint(0, 10000)), "rnd")
+        reflected.reflectRandom(LogicRandom(random.randint(1000, 10000)), "rnd")
 
         if reflected.reflectArray(0, "skins") != 0:
+            reflected.reflectNextInt(player.UnlockedSkins)
             reflected.reflectExitArray()
 
         # LABEL_30
@@ -413,7 +395,7 @@ class OwnHomeDataMessage(PiranhaMessage):
 
         # Characters
         reflected.reflectObject("chars")
-        LogicCharacterEntry.reflect(reflected, receiver["Player"])
+        LogicCharacterEntry.reflect(reflected, player)
         reflected.reflectExitObject()
 
         # Quests

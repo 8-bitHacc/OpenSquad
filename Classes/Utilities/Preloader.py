@@ -2,16 +2,20 @@ import json
 
 class Preloader:
     ConfigurationData = None
+    offers = None
 
     @classmethod
     def preloadAll(cls):
         cls.ConfigurationData = json.loads(open("Classes/StaticData/Configuration.json", "r").read())
+        cls.offers = json.loads(open("Classes/StaticData/Offers.json", "r").read())
 
     @classmethod
     def preloadItem(cls, itemName=None):
         try:
             if itemName == "Configuration":
                 cls.ConfigurationData = json.loads(open("Classes/StaticData/Configuration.json", "r").read())
+            elif itemName == "Shop":
+                cls.offers = json.loads(open("Classes/StaticData/Offers.json", "r").read())
             else:
                 raise FileNotFoundError
 
@@ -23,6 +27,8 @@ class Preloader:
         try:
             if itemName == "Configuration":
                 cls.ConfigurationData = None
+            elif itemName == "Shop":
+                cls.offers = None
             else:
                 raise FileNotFoundError
         except FileNotFoundError:
@@ -32,6 +38,7 @@ class Preloader:
     def getItemData(cls, itemName):
         try:
             if itemName == "Configuration": return cls.ConfigurationData
+            elif itemName == "Shop": return cls.offers
             else: raise FileNotFoundError
 
         except FileNotFoundError:
@@ -50,6 +57,7 @@ class Preloader:
     def preloadFile(cls, path: str):
         valid = {
             "Classes/StaticData/Configuration.json": "ConfigurationData",
+            "Classes/StaticData/Offers.json": "offers",
         }
 
         if path not in valid:

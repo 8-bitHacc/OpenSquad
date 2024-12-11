@@ -24,7 +24,7 @@ class LogicCharacterEntry:
 
     @classmethod
     def reflectCharacter(cls, reflector: LogicJSONOutReflector, characterData: dict) -> None:
-        reflector.reflectInt(800000 + characterData.get("id", 0), "data", 0)
+        reflector.reflectInt(800000 + characterData["id"], "data", 0)
         reflector.reflectInt(5500000 + characterData.get("skin", 0), "skin", 5500000)
         reflector.reflectInt(characterData.get("pts", 0), "pts", 0)
         reflector.reflectInt(characterData.get("lvl", 0), "lvl", 0)

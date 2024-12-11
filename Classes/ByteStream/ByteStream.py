@@ -465,7 +465,7 @@ class ByteStream(ChecksumEncoder):
         low += (self.payload[self.offset + 2] << 8)
         low += (self.payload[self.offset + 3])
         self.offset += 4
-        return LogicLong.toLong(high, low)
+        return [high, low]
 
     def writeBattlePlayerMap(self, playerMap):
         ByteStreamHelper.writeBattlePlayerMap(self, playerMap)

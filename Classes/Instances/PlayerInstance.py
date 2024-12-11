@@ -22,6 +22,7 @@ class PlayerInstance:
             "id": 4,
         }
     ]
+    UnlockedSkins = []
 
     def getPlayerID(self) -> list:
         return [self.HighID, self.LowID]

@@ -4,68 +4,7 @@ from Classes.Protocol.Commands.LogicCommand import LogicCommand
 class LogicCommandManager:
 
     CommandIDs = {
-       217: "LogicProLeagueSeasonChangedCommand",
-       504: "LogicSendAllianceMailCommand",
-       221: "LogicTeamChatMuteStateChangedCommand",
-       215: "LogicSetSupportedCreatorCommand",
-       519: "LogicPurchaseOfferCommand",
-       539: "LogicBrawlPassAutoCollectWarningSeenCommand",
-       541: "LogicClearESportsHubNotificationCommand",
-       211: "LogicOffersChangedCommand",
-       209: "LogicKeyPoolChangedCommand",
-       202: "LogicDiamondsAddedCommand",
-       527: "LogicSetPlayerNameColorCommand",
-       517: "LogicClaimRankUpRewardCommand",
-       218: "LogicBrawlPassSeasonChangedCommand",
-       528: "LogicViewInboxNotificationCommand",
-       536: "LogicPurchaseBrawlPassProgressCommand",
-       205: "LogicDecreaseHeroScoreCommand",
-       507: "LogicUnlockSkinCommand",
-       542: "LogicSelectGroupSkinCommand",
-       534: "LogicPurchaseBrawlPassCommand",
-       204: "LogicDayChangedCommand",
-       526: "LogicUnlockFreeSkinsCommand",
-       525: "LogicSelectCharacterCommand",
-       531: "LogicCancelPurchaseOfferCommand",
-       524: "LogicVideoStartedCommand",
-       522: "LogicHeroSeenCommand",
-       214: "LogicGemNameChangeStateChangedCommand",
-       206: "LogicAddNotificationCommand",
-       515: "LogicClearShopTickersCommand",
-       535: "LogicClaimTailRewardCommand",
-       538: "LogicSelectEmoteCommand",
-       533: "LogicQuestsSeenCommand",
-       512: "LogicToggleInGameHintsCommand",
-       203: "LogicGiveDeliveryItemsCommand",
-       523: "LogicClaimAdRewardCommand",
-       224: "LogicSetESportsHubNotificationCommand",
-       505: "LogicSetPlayerThumbnailCommand",
-       210: "LogicIAPChangedCommand",
-       208: "LogicTransactionsRevokedCommand",
-       201: "LogicChangeAvatarNameCommand",
-       511: "LogicHelpOpenedCommand",
-       521: "LogicPurchaseHeroLvlUpMaterialCommand",
-       506: "LogicSelectSkinCommand",
-       520: "LogicLevelUpCommand",
-       508: "LogicChangeControlModeCommand",
-       514: "LogicDeleteNotificationCommand",
-       212: "LogicPlayerDataChangedCommand",
-       216: "LogicCooldownExpiredCommand",
-       540: "LogicPurchaseChallengeLivesCommand",
-       213: "LogicInviteBlockingChangedCommand",
-       529: "LogicSelectStarPowerCommand",
-       503: "LogicClaimDailyRewardCommand",
-       509: "LogicPurchaseDoubleCoinsCommand",
-       537: "LogicVanityItemSeenCommand",
-       219: "LogicBrawlPassUnlockedCommand",
-       532: "LogicItemSeenCommand",
-       530: "LogicSetPlayerAgeCommand",
-       207: "LogicChangeResourcesCommand",
-       1000: "LogicDebugCommand",
-       500: "LogicGatchaCommand",
-       220: "LogicHeroWinQuestsChangedCommand",
-       222: "LogicRankedSeasonChangedCommand",
-       223: "LogicCooldownAddedCommand",
+        523: "LogicQuestsSeenCommand"
     }
 
     UseLogic = {} # Commands that import a Logic class
@@ -145,8 +84,7 @@ class LogicCommandManager:
                             print("error")
 
     @classmethod
-    def loadAllCommands(cls):
-
+    def loadAllCommands(cls) -> int:
         for item in Utility.items("Classes/Protocol/Commands/Client") + Utility.items("Classes/Protocol/Commands/Server"):
             if item.endswith(".py"):
                 cls.loadCommand(item)
@@ -154,7 +92,7 @@ class LogicCommandManager:
         return len([y for x, y in cls.CommandIDs.items() if not isinstance(y, str)])
 
     @classmethod
-    def commandExists(cls, messageid: int):
+    def commandExists(cls, messageid: int) -> bool:
         return messageid in cls.CommandIDs.keys()
 
     @classmethod
@@ -169,10 +107,8 @@ class LogicCommandManager:
             return LogicCommand(b"")
     
     @staticmethod
-    def isServerToClient(commandID: int):
+    def isServerToClient(commandID: int) -> bool:
         if 200 <= commandID < 500:
             return True
-        elif 500 <= commandID:
-            return False
         
         return False
