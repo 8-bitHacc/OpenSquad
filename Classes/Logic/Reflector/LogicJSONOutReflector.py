@@ -57,10 +57,23 @@ class LogicJSONOutReflector(LogicReflector):
 
         if endArray: self.currentArrayIndex += 1
 
-    def reflectBool(self, value: bool, objectName: str, a4: bool):
-        if self.currentObject is None: Debugger.error("LogicJSONOutReflector: no object exists")
+    def reflectBool(self, value: bool, objectName: str, a4: bool, endArray: bool = False):
+        #if self.currentObject is None or self.currentArray is None:
+            #Debugger.error("LogicJSONOutReflector: no object exists")
+
+        if value == a4:
+            if endArray:
+                del self.currentArray[self.currentArrayIndex]
+                if not self.currentArrayIndex == 0: self.currentArrayIndex -= 1
+
+            return
+
         if value ^ a4:
-            self.currentObject[objectName] = value
+            if self.currentArray is None: self.currentObject[objectName] = value
+            else:
+                self.currentArray[self.currentArrayIndex][objectName] = value
+
+        if endArray: self.currentArrayIndex += 1
 
     def reflectLong(self, highInt: int, lowInt: int, objectName: str, a7: int, a8: int):
         longValue: int = LogicLong.toLong(highInt, lowInt)

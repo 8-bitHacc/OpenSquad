@@ -28,7 +28,7 @@ class OwnHomeDataMessage(PiranhaMessage):
         #jsonRefl = self.getJSON()
         #jsonData = json.loads(jsonRefl)
         #jsonData["rnd"] = LogicRandom().iterateRandomSeed(random.randint(1000, 10000))
-        self.writeString(self.reflectJSON(receiver))
+        self.writeString(self.reflectJSON(receiver["Player"]))
 
         # dont know what that is
         base2 = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01'

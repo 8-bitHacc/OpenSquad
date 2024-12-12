@@ -1,5 +1,5 @@
+import time
 from Classes.Protocol.PiranhaMessage import PiranhaMessage
-
 
 class LoginOkMessage(PiranhaMessage):
     def __init__(self, payload=b''):
@@ -16,12 +16,12 @@ class LoginOkMessage(PiranhaMessage):
         self.writeInt(145)  # Server Minor
         self.writeInt(516)  # Server Build
         self.writeInt(11)  # Unknown
-        self.writeString("dev")  # Server Enviroment
+        self.writeString("dev")  # Server Environment
         self.writeInt(0)  # Session Count
         self.writeInt(0)  # Play Time in Seconds
         self.writeInt(0)  # Days since Account Creation in Seconds
         self.writeString()  # Facebook AppID
-        self.writeString("1714237625898")  # Server Time
+        self.writeString(str(time.time()))  # Server Time
         self.writeString("1714237625000")  # Account Creation Date
         self.writeInt(0)  # Startup Cooldown in Seconds
         self.writeString()  # Google ServiceID (Google Play?)
