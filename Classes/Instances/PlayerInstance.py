@@ -23,6 +23,10 @@ class PlayerInstance:
         }
     ]
     UnlockedSkins = []
+    Quests = [{
+        "id": 1,
+        "progress": 4
+    }]
 
     def getPlayerID(self) -> list:
         return [self.HighID, self.LowID]

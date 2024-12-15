@@ -10,12 +10,12 @@ class LogicCommand(ByteStream):
         self.executionTick: list = [0, 0]
         self.accountID: list = [0, 0]
 
-    def decode(self, byteStream: ByteStream) -> None:
+    def decode(self, byteStream: ByteStream) -> LogicRawInReflector:
         rawIn = LogicRawInReflector(byteStream)
         self.tick = rawIn.reflectLong(0, 0, 0, "t", 0) # Command Tick
         self.executionTick = rawIn.reflectLong(0, 0, 0, "g", 0)  # Execution Tick
         self.accountID = rawIn.reflectLong(0, 0, 0, "aid", 0) # AccountID
-        rawIn.destruct()
+        return rawIn
 
     def encode(self, receiver: dict)  -> None:
         """Encodes the command header. (Squad uses reflection for it)"""

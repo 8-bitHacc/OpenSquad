@@ -80,3 +80,5 @@ class LogicRawInReflector(LogicReflector):
         if v6 == 112:
             return 0
 
+    def reflectReflectablePointerBase(self, objectName: str, value: int):
+        return self.byteStream.readVInt() # LogicRawInReflector + 8 init value = LogicReflector::sm_pDefaultReflectableIdMap

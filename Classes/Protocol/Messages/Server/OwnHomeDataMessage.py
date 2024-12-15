@@ -3,6 +3,7 @@ import time
 from Classes.Instances.PlayerInstance import PlayerInstance
 from Classes.Logic.LogicRandom import LogicRandom
 from Classes.Logic.Reflectable.LogicCharacterEntry import LogicCharacterEntry
+from Classes.Logic.Reflectable.LogicQuestEntry import LogicQuestEntry
 from Classes.Logic.Reflectable.LogicShopEntry import LogicShopEntry
 from Classes.Logic.Reflector.LogicJSONOutReflector import LogicJSONOutReflector
 from Classes.Logic.Reflector.LogicRawOutReflector import LogicRawOutReflector
@@ -40,10 +41,10 @@ class OwnHomeDataMessage(PiranhaMessage):
         self.writeLong(*receiver["Player"].getPlayerID()) # AvatarID
         self.writeStringReference(receiver["Player"].Name) # PlayerName
         self.writeVInt(6)
-        self.writeBoolean(False) # Enables Tutorial State? (Shows hand pointing at "PLAY")
+        self.writeBoolean(True) # Enables Tutorial State? (Shows hand pointing at "PLAY")
         self.writeLong(0, 154) # what?
         self.writeVInt(1) # dont know
-        self.writeVInt(0) # EXP League Tokens Collected
+        self.writeVInt(99999999) # EXP League Tokens Collected
         self.writeStringReference(None)
         self.writeVInt(0) # Diamonds Count
         self.writeVInt(2)
@@ -344,6 +345,7 @@ class OwnHomeDataMessage(PiranhaMessage):
             reflected.reflectExitArray()
 
         if reflected.reflectArray(0, "milestones") != 0:
+            reflected.reflectNextInt([4700000, 4700001, 4700002, 4700003, 4700004, 4700005, 4700006, 4700007, 4700008, 4700009, 4700010, 4700011, 4700012, 4700013, 4700014, 4700015, 4700016, 4700017, 4700018, 4700019, 4700020, 4700021, 4700022, 4700023, 4700024, 4700025, 4700026, 4700027, 4700028, 4700029, 4700030, 4700031, 4700032, 4700033, 4700034, 4700035, 4700036, 4700037, 4700038, 4700039, 4700040, 4700041, 4700042, 4700043, 4700044, 4700045, 4700046, 4700047, 4700048, 4700049, 4700050, 4700051, 4700052, 4700053, 4700054, 4700055, 4700056, 4700057, 4700058, 4700059, 4700060, 4700061, 4700062, 4700063, 4700064, 4700065, 4700066, 4700067, 4700068, 4700069, 4700070, 4700071, 4700072, 4700073, 4700074, 4700075, 4700076, 4700077, 4700078, 4700079, 4700080, 4700081, 4700082, 4700083, 4700084, 4700085, 4700086, 4700087, 4700088, 4700089, 4700090, 4700091, 4700092, 4700093, 4700094, 4700095])
             reflected.reflectExitArray()
 
         if reflected.reflectArray(0, "premium_milestones") != 0:
@@ -399,15 +401,12 @@ class OwnHomeDataMessage(PiranhaMessage):
         reflected.reflectExitObject()
 
         # Quests
-        reflected.reflectObject("quests")
-        reflected.reflectArray(1, "questProgress")
-        reflected.reflectExitArray()
-        reflected.reflectExitObject()
+        LogicQuestEntry.reflect(reflected, player.Quests)
 
         # Tutorials
         reflected.reflectObject("tutorials")
         reflected.reflectArray(1, "tut")
-        for tut in []: # 5000001,5000002,5000003,5000004,5000005,5000006,5000007,5000008,5000009,5000018
+        for tut in [5000001,5000002,5000003,5000004,5000005,5000006,5000007,5000008,5000009,5000012]:
             reflected.reflectNextInt(tut)
         reflected.reflectExitArray()
         reflected.reflectExitObject()

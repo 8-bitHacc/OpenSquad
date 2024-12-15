@@ -81,3 +81,6 @@ class LogicRawOutReflector(LogicReflector):
 
     def reflectNextBool(self, value: bool):
         self.byteStream.writeBoolean(value)
+
+    def reflectReflectablePointerBase(self, objectName: str, value: int = 0):
+        self.byteStream.writeVInt(value) # :gene:

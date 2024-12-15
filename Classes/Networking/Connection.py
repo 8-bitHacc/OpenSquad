@@ -48,10 +48,9 @@ class Connection(Thread):
                     PacketID: int = Header[0]
 
                     PacketLength: int = Header[1]
-                    PacketPayload: Union[bytes, bytearray] = self.recv(PacketLength)
-                    PacketPayload = self.messaging.PepperCrypto.decrypt(PacketID, bytes(PacketPayload))
+                    PacketPayload: Union[bytes, bytearray] = self.messaging.PepperCrypto.decrypt(PacketID, bytes(self.recv(PacketLength)))
 
-                    #if PacketID == 18853 or PacketID == 10349: self.dumpMessage(PacketID, PacketPayload)
+                    #if PacketID == 16543: self.dumpMessage(PacketID, PacketPayload)
                             
                     self.messageManager.receiveMessage(PacketID, PacketPayload)
 

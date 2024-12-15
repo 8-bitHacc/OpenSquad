@@ -1,18 +1,18 @@
 from Classes.Protocol.Commands.LogicCommand import LogicCommand
 
-class LogicQuestsSeenCommand(LogicCommand):
+class LogicTutorialStepsPassedCommand(LogicCommand):
     def __init__(self, payload):
         super().__init__(payload)
-        self.questID: int = 0
+        self.tutorialStep: int = 0
 
     def decode(self, byteStream):
         raw = super().decode(byteStream)
-        self.questID = raw.reflectReflectablePointerBase("data", 0)
-        raw.reflectInt(0, "ev", 0)
+        self.tutorialStep = raw.reflectReflectablePointerBase("data", 0)
+        print(f"passed tutorial step: {self.tutorialStep}")
         raw.destruct()
 
     def execute(self, receiver):
         pass
 
     def getCommandType(self):
-        return 503
+        return 520

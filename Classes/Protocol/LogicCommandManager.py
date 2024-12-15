@@ -4,7 +4,8 @@ from Classes.Protocol.Commands.LogicCommand import LogicCommand
 class LogicCommandManager:
 
     CommandIDs = {
-        523: "LogicQuestsSeenCommand"
+        503: "LogicQuestsSeenCommand",
+        520: "LogicTutorialStepsPassedCommand"
     }
 
     UseLogic = {} # Commands that import a Logic class
