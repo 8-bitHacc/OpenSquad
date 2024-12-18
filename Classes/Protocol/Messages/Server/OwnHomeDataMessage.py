@@ -5,6 +5,7 @@ from Classes.Logic.LogicRandom import LogicRandom
 from Classes.Logic.Reflectable.LogicCharacterEntry import LogicCharacterEntry
 from Classes.Logic.Reflectable.LogicQuestEntry import LogicQuestEntry
 from Classes.Logic.Reflectable.LogicShopEntry import LogicShopEntry
+from Classes.Logic.Reflectable.LogicTimeObject import LogicTimeObject
 from Classes.Logic.Reflector.LogicJSONOutReflector import LogicJSONOutReflector
 from Classes.Logic.Reflector.LogicRawOutReflector import LogicRawOutReflector
 from Classes.Protocol.PiranhaMessage import PiranhaMessage
@@ -16,50 +17,53 @@ class OwnHomeDataMessage(PiranhaMessage):
         self.packetVersion = 0
 
     def encode(self, receiver):
-        self.writeLong(0, 1)
-        self.writeLong(0, 1)
+        self.writeLongLong(0, 1)
 
-        # sub
+        # sub_852248
+        self.writeLongLong(0, 1)
         self.writeInt(1399183669)
-        base = b'\x02\xe7\x11\x89\xd4a\x92\xd4a\x95\xd4a\x96\xd4a\xae\xd4a\x80\xd4a\x81\xd4a\x82\xd4a\x83\xd4a\x84\xd4a\x87\xd4a\x90\xd4a\x93\xd4a\xa0\xd4a\x86\xd4a\x88\xd4a\xa6\xd4a\x04\xa9\xcb\xc9\x02\xa2\xcb\xc9\x02\xa0\xcb\xc9\x02\xa6\xcb\xc9\x02\x00\x00\x00\x17ds2_ExpLeagueGrasslands\x8a\xbe\x92\x01\xbf\xa7\xd6\xb9\x07\xa0\xeem\x11\x89\xd4a\x92\xd4a\x95\xd4a\x96\xd4a\xae\xd4a\x80\xd4a\x81\xd4a\x82\xd4a\x83\xd4a\x84\xd4a\x87\xd4a\x90\xd4a\x93\xd4a\xa0\xd4a\x86\xd4a\x88\xd4a\xa6\xd4a\x04\xa2\xcb\xc9\x02\xa6\xcb\xc9\x02\xa9\xcb\xc9\x02\xa0\xcb\xc9\x02\x00\x00\x00\x1ads1Duo_ExpLeagueGrasslands\x8e\xbe\x92\x01\xf0\xca\xd3\xdc\t\xa0\xeem\x00'
+        # Constructs reflector and encodes reflectableArrays "w" and "dm"
+        base = b'\x02\xe7\x11\x89\xd4a\x92\xd4a\x95\xd4a\x96\xd4a\xae\xd4a\x80\xd4a\x81\xd4a\x82\xd4a\x83\xd4a\x84\xd4a\x87\xd4a\x90\xd4a\x93\xd4a\xa0\xd4a\x86\xd4a\x88\xd4a\xa6\xd4a\x04\xa9\xcb\xc9\x02\xa2\xcb\xc9\x02\xa0\xcb\xc9\x02\xa6\xcb\xc9\x02\x00\x00\x00\x17ds3_ExpLeagueGrasslands\x8a\xbe\x92\x01\xbf\xa7\xd6\xb9\x07\xa0\xeem\x11\x89\xd4a\x92\xd4a\x95\xd4a\x96\xd4a\xae\xd4a\x80\xd4a\x81\xd4a\x82\xd4a\x83\xd4a\x84\xd4a\x87\xd4a\x90\xd4a\x93\xd4a\xa0\xd4a\x86\xd4a\x88\xd4a\xa6\xd4a\x04\xa2\xcb\xc9\x02\xa6\xcb\xc9\x02\xa9\xcb\xc9\x02\xa0\xcb\xc9\x02\x00\x00\x00\x1ads1Duo_ExpLeagueGrasslands\x8e\xbe\x92\x01\xf0\xca\xd3\xdc\t\xa0\xeem\x00'
 
         self.payload += base
         self.offset += base.__len__()
 
-        #jsonRefl = self.getJSON()
-        #jsonData = json.loads(jsonRefl)
-        #jsonData["rnd"] = LogicRandom().iterateRandomSeed(random.randint(1000, 10000))
         self.writeString(self.reflectJSON(receiver["Player"]))
 
         # dont know what that is
-        base2 = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01\x01'
+        base2 = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x01'
         self.payload += base2
         self.offset += len(base2)
 
-        # LogicClientAvatar::encode
-        self.writeLong(*receiver["Player"].getPlayerID()) # AvatarID
-        self.writeLong(*receiver["Player"].getPlayerID()) # AvatarID
-        self.writeStringReference(receiver["Player"].Name) # PlayerName
-        self.writeVInt(6)
-        self.writeBoolean(True) # Enables Tutorial State? (Shows hand pointing at "PLAY")
-        self.writeLong(0, 154) # what?
-        self.writeVInt(1) # dont know
-        self.writeVInt(99999999) # EXP League Tokens Collected
-        self.writeStringReference(None)
-        self.writeVInt(0) # Diamonds Count
-        self.writeVInt(2)
-        self.writeVInt(1)
-        self.writeVInt(0) # Trophies Amount
+        if self.writeBoolean(True): # making it false crashes for some odd reason...
+            # LogicClientAvatar::encode
+            self.writeLong(*receiver["Player"].getPlayerID()) # AvatarID
+            self.writeLong(*receiver["Player"].getPlayerID()) # AvatarID
+            self.writeStringReference(receiver["Player"].Name) # PlayerName
+            self.writeVInt(6)
+            self.writeBoolean(True) # Enables Tutorial State? (Shows hand pointing at "PLAY")
+            self.writeLong(0, 154) # what?
+            self.writeVInt(1) # dont know
+            self.writeVInt(0) # EXP League Tokens Collected
+            self.writeStringReference(None)
+            self.writeVInt(0) # Diamonds Count
+            self.writeVInt(2)
+            self.writeVInt(1)
+            self.writeVInt(0) # Trophies Amount
 
-        self.writeVInt(3) # Commodity Count
+            self.writeVInt(3) # Commodity Count
 
-        # TODO: Encode these entries
-        self.writeVInt(2)
+            # TODO: Encode these entries
+            self.writeVInt(2)
 
-        clientAvatar = b'\x00\xa1\xcf$\x01\xa0\x84=\x00\xa4\xcf$\x01\x9f\x9a\x0c\x00\x02\x00\x82\xea0\x01\x01\x00\x84\xea0\x01\xa8\x0f\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+            clientAvatar = b'\x00\xa1\xcf$\x01\xa0\x84=\x00\xa4\xcf$\x01\x9f\x9a\x0c\x00\x02\x00\x82\xea0\x01\x01\x00\x84\xea0\x01\xa8\x0f'
 
-        self.payload += clientAvatar
-        self.offset += len(clientAvatar)
+            self.payload += clientAvatar
+            self.offset += len(clientAvatar)
+
+        base4 = b'\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00\x00'
+        self.payload += base4
+        self.offset += len(base4)
 
     def getMessageType(self):
         return 24548
@@ -326,8 +330,9 @@ class OwnHomeDataMessage(PiranhaMessage):
         reflected.reflectExitObject()
         # EventManager
 
-        reflected.reflectInt(33517122184, "tick", 0)
-        reflected.reflectInt(33517115968, "globalTick", 0)
+        tick = int(time.time())
+        reflected.reflectInt(tick, "tick", 0)
+        reflected.reflectInt(tick, "globalTick", 0)
         reflected.reflectRandom(LogicRandom(random.randint(1000, 10000)), "rnd")
 
         if reflected.reflectArray(0, "skins") != 0:
@@ -371,29 +376,17 @@ class OwnHomeDataMessage(PiranhaMessage):
             reflected.reflectNextInt(6200000)
             reflected.reflectExitArray()
 
-        reflected.reflectObject("gemT")
-        reflected.reflectInt(1000, "t", 0)
-        reflected.reflectBool(False, "p", False)
-        reflected.reflectExitObject()
+        LogicTimeObject.reflect(reflected, 0, objectName="gemT")
 
-        reflected.reflectObject("lootLimitT")
-        reflected.reflectInt(1000, "t", 0)
-        reflected.reflectBool(False, "p", False)
-        reflected.reflectExitObject()
+        LogicTimeObject.reflect(reflected, 1000, objectName="lootLimitT")
 
         reflected.reflectInt(20000, "lootLimitUnused", 0)
         reflected.reflectInt(100, "gemRewardTokenSequence", 0)
         reflected.reflectInt(1, "plazaChestI", 0)
 
-        reflected.reflectObject("plazaRewardT")
-        reflected.reflectInt(6974, "t", 0)
-        reflected.reflectBool(False, "p", False)
-        reflected.reflectExitObject()
+        LogicTimeObject.reflect(reflected, 6974, True, objectName="plazaRewardT")
 
-        reflected.reflectObject("plazaChestT")
-        reflected.reflectInt(69746, "t", 0)
-        reflected.reflectBool(False, "p", False)
-        reflected.reflectExitObject()
+        LogicTimeObject.reflect(reflected, 0, objectName="plazaChestT")
 
         # Characters
         reflected.reflectObject("chars")
@@ -405,10 +398,18 @@ class OwnHomeDataMessage(PiranhaMessage):
 
         # Tutorials
         reflected.reflectObject("tutorials")
-        reflected.reflectArray(1, "tut")
+        reflected.reflectArray(10, "tut")
         for tut in [5000001,5000002,5000003,5000004,5000005,5000006,5000007,5000008,5000009,5000012]:
             reflected.reflectNextInt(tut)
+
         reflected.reflectExitArray()
         reflected.reflectExitObject()
+
+        # Battle Logs (Unused)
+        reflected.reflectObject("bRes")
+        reflected.reflectExitObject()
+
+        reflected.reflectInt(0, "pProg", 0)
+        reflected.reflectInt(0, "sEvent", 0)
 
         return json.dumps(reflected.jsonData, ensure_ascii=False)

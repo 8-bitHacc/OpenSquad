@@ -7,7 +7,7 @@ class LoginOkMessage(PiranhaMessage):
         self.packetVersion = 1
 
     def encode(self, receiver):
-        self.writeLong(0, 1)  # AccountID
+        self.writeLong(0, 1)  # HomeID
         self.writeLong(0, 1)  # AccountID
         self.writeString("SquadBusters")  # AccountToken
         self.writeString()  # Facebook ID in String format
@@ -16,7 +16,7 @@ class LoginOkMessage(PiranhaMessage):
         self.writeInt(145)  # Server Minor
         self.writeInt(516)  # Server Build
         self.writeInt(11)  # Unknown
-        self.writeString("dev")  # Server Environment
+        self.writeString("prod")  # Server Environment
         self.writeInt(0)  # Session Count
         self.writeInt(0)  # Play Time in Seconds
         self.writeInt(0)  # Days since Account Creation in Seconds

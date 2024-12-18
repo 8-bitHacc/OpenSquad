@@ -39,7 +39,7 @@ class LogicLaserMessageFactory:
         16939: "AllianceWarMessage",
         30000: "AttributionMessage",
         10100: "ClientHelloMessage",
-        18853: "ClientInputMessage",
+        18856: "ClientInputMessage",
         29997: "CryptoErrorMessage",
         24403: "LeaderboardMessage",
         24101: "OwnHomeDataMessage",

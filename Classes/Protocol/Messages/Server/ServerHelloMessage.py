@@ -9,5 +9,5 @@ class ServerHelloMessage(PiranhaMessage):
     def encode(self, receiver):
         self.writeBytes(self.sessionKey, 24)
 
-    def getMessageType(self):
+    def getMessageType(self) -> int:
         return 20100

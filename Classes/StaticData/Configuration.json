@@ -1,3 +1,6 @@
 {
-    "UsePepper": true
+    "Maintenance": 0,
+    "Environment": "prod",
+    "ContentHash": "b956a4cc72e4d974fb2541a8722a3efbeb0f984f",
+    "CurrentMajor": 1
 }

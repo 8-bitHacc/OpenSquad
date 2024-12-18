@@ -22,6 +22,7 @@ class EndClientTurnMessage(PiranhaMessage):
         self.commandsCount = self.readVInt()
         if self.commandsCount > 512:
             Debugger.error("EndClientTurn::decode() command count is too high! (%d)".format(self.commandsCount))
+            return
 
         for command in range(self.commandsCount):
             commandID = self.readVInt()
@@ -39,9 +40,15 @@ class EndClientTurnMessage(PiranhaMessage):
                     print(
                         f"[EndClientTurnMessage::] Skipped unimplemented command with type: {commandID}, {LogicCommandManager.getCommandName(commandID)}")
             else:
-                commandsLeft = (command + 1) - self.commandsCount
+                commandsLeft = self.commandsCount - (command + 1)
                 print(
                     f"[EndClientTurnMessage::] Skipped unimplemented command with type: {commandID} {''.join(f'(next {commandsLeft} command(s) might have trouble being decoded)' if commandsLeft != 0 else '')}")
+
+    def execute(self, receiver):
+        for command in self.commands:
+            if "instance" not in command: continue
+
+            command["instance"].execute(receiver)
 
 
     def getMessageType(self):

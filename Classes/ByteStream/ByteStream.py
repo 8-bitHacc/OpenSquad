@@ -1,19 +1,16 @@
-from Classes.ByteStream.ChecksumEncoder import ChecksumEncoder
 from Classes.ByteStream.LogicStringUtil import LogicStringUtil
 from Classes.Utilities.Debugger import Debugger
 from Classes.ByteStream.ByteStreamHelper import ByteStreamHelper
 from Classes.Logic.LogicLong import LogicLong
 
-class ByteStream(ChecksumEncoder):
+class ByteStream:
     def __init__(self, payload):
-        super().__init__()
         self.payload = payload # 4, Buffer
         self.messageLength = len(self.payload) # 20, Length
         self.offset = 0 # 16, Offset
         self.bitoffset = 0 # 6, Bitoffset
     
     def destruct(self):
-        super().destruct()
         self.payload = None
         self.messageLength = 0
         self.offset = 0
@@ -62,7 +59,7 @@ class ByteStream(ChecksumEncoder):
             ByteStream.writeIntToByteArray(self, -1)        
 
     # TODO: writeBoolean
-    def writeBoolean(self, value):
+    def writeBoolean(self, value: bool) -> bool:
         payload = list(self.payload)
         if self.bitoffset == 0:
             self.offset += 1
@@ -80,7 +77,6 @@ class ByteStream(ChecksumEncoder):
     
     # TODO: writeInt8
     def writeInt8(self, value):
-        super().writeInt8(value)
         self.bitoffset = 0
         payload = list(self.payload)
         payload.append(value & 0xFF)
@@ -89,7 +85,6 @@ class ByteStream(ChecksumEncoder):
 
     # TODO: writeInt16
     def writeInt16(self, value):
-        super().writeInt16(value)
         self.bitoffset = 0
         payload = list(self.payload)
         payload.append(value >> 8 & 0xFF)
@@ -99,7 +94,6 @@ class ByteStream(ChecksumEncoder):
 
     # TODO: writeInt24
     def writeInt24(self, value):
-        super().writeInt24(value)
         self.bitoffset = 0
         payload = list(self.payload)
         payload.append(value >> 16 & 0xFF)
@@ -120,7 +114,6 @@ class ByteStream(ChecksumEncoder):
 
     # TODO: writeBytes
     def writeBytes(self, values, length):
-        super().writeBytes(values, length)
         self.bitoffset = 0
         if values != 0:
             self.writeIntToByteArray(length)
@@ -132,7 +125,6 @@ class ByteStream(ChecksumEncoder):
 
     # TODO: writeByte
     def writeByte(self, value):
-        super().writeByte(self, value)
         self.bitoffset = 0
         payload = list(self.payload)
         payload.append(value & 0xFF)
@@ -141,7 +133,6 @@ class ByteStream(ChecksumEncoder):
 
     # TODO: writeShort
     def writeShort(self, short):
-        super().writeShort(short)
         self.bitoffset = 0 # a1[6] = 0; a1 refers to the ByteStream class
         newBuffer = list(self.payload)
         newBuffer.append(short >> 8 & 0xFF)
@@ -230,22 +221,22 @@ class ByteStream(ChecksumEncoder):
     def writeLogicLong(self, high, low):
         ByteStreamHelper.encodeLogicLong(self, high, low)
     
-    def readLogicLong(self):
+    def readLogicLong(self) -> list:
         return ByteStreamHelper.decodeLogicLong(self)
 
-    def isByteStream(self):
+    def isByteStream(self) -> bool:
         return True # return 1;
 
-    def getLength(self):
+    def getLength(self) -> int:
         if self.offset < self.messageLength:
             return self.messageLength
         
         return self.offset
     
-    def getOffset(self):
+    def getOffset(self) -> int:
         return self.offset # return *(_DWORD *)(a1 + 16);
     
-    def isAtEnd(self):
+    def isAtEnd(self) -> bool:
         return self.offset > self.messageLength
     
     def clear(self, a2):
@@ -357,7 +348,7 @@ class ByteStream(ChecksumEncoder):
 
         return result  
 
-    def readInt(self):
+    def readInt(self) -> int:
         self.bitoffset = 0
         result = (self.payload[self.offset] << 24)
         result += (self.payload[self.offset + 1] << 16)
@@ -366,10 +357,10 @@ class ByteStream(ChecksumEncoder):
         self.offset += 4
         return result
 
-    def readInt8(self):
+    def readInt8(self) -> int:
         return self.readInt()
     
-    def readIntLittleEndian(self):
+    def readIntLittleEndian(self) -> int:
         self.bitoffset = 0
         result = (self.payload[self.offset])
         result += (self.payload[self.offset + 1] << 8)
@@ -378,7 +369,7 @@ class ByteStream(ChecksumEncoder):
         self.offset += 4
         return result
     
-    def readString(self, maxLength=900000):
+    def readString(self, maxLength=900000) -> str:
         self.bitoffset = 0
         length = self.readInt()
         if length <= -1:
@@ -396,17 +387,17 @@ class ByteStream(ChecksumEncoder):
     def writeDataReference(self, High, Low=0):
         ByteStreamHelper.writeDataReference(self, High, Low)
     
-    def readDataReference(self):
+    def readDataReference(self) -> list:
         return ByteStreamHelper.readDataReference(self)
     
-    def readBoolean(self):
+    def readBoolean(self) -> bool:
         v1 = self.bitoffset 
         v3 = self.offset + ((8 - v1) >> 3)
         self.offset = v3
         self.bitoffset = (v1 + 1) & 7
         return (1 & (1 << v1) & self.payload[self.offset - 1]) != 0
     
-    def readBytes(self, length, max=99999):
+    def readBytes(self, length, max=99999) -> bytes:
         self.bitoffset = 0
         if (length & 0x80000000) != 0:
             if length != -1:
@@ -424,7 +415,7 @@ class ByteStream(ChecksumEncoder):
         logicLong = LogicLong(long, long1)
         logicLong.encode(self)
     
-    def readLong(self):
+    def readLong(self) -> list:
         return [self.readInt(), self.readInt()] # High and Low
     
     def writeCompressedString(self, string=None):
@@ -432,10 +423,10 @@ class ByteStream(ChecksumEncoder):
         compressed = ByteStreamHelper.compress(self, string)
         self.payload += compressed
     
-    def readCompressedString(self):
+    def readCompressedString(self) -> str:
         return ByteStreamHelper.decompress(self)
     
-    def readStringReference(self, max=900000):
+    def readStringReference(self, max=900000) -> str:
         self.bitoffset = 0
         length = (self.payload[self.offset] << 24)
         length += (self.payload[self.offset + 1] << 16)
@@ -453,7 +444,7 @@ class ByteStream(ChecksumEncoder):
         self.offset += length
         return result
     
-    def readLongLong(self):
+    def readLongLong(self) -> list:
         self.bitoffset = 0
         high = (self.payload[self.offset] << 24)
         high += (self.payload[self.offset + 1] << 16)
@@ -477,7 +468,7 @@ class ByteStream(ChecksumEncoder):
         #data["Low"] = self.readVInt()
         #return [data["High"], data["Low"]]
     
-    def readBytesLength(self):
+    def readBytesLength(self) -> int:
         self.bitoffset = 0
         result = (self.payload[self.offset] << 24)
         result += (self.payload[self.offset + 1] << 16)

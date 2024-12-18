@@ -2,7 +2,6 @@ from Classes.ByteStream.ByteStream import ByteStream
 from Classes.Logic.Reflector.LogicRawInReflector import LogicRawInReflector
 from Classes.Logic.Reflector.LogicRawOutReflector import LogicRawOutReflector
 
-
 class LogicCommand(ByteStream):
     def __init__(self, payload):
         super().__init__(payload)

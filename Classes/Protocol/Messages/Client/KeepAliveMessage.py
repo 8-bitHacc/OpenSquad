@@ -1,6 +1,5 @@
 from Classes.Protocol.PiranhaMessage import PiranhaMessage
 from Classes.Protocol.Messages.Server.KeepAliveServerMessage import KeepAliveServerMessage
-#from Classes.Protocol.Messages.Server.ShutdownStartedMessage import ShutdownStartedMessage
 
 class KeepAliveMessage(PiranhaMessage):
     def __init__(self, payload):

@@ -5,7 +5,8 @@ class LogicCommandManager:
 
     CommandIDs = {
         503: "LogicQuestsSeenCommand",
-        520: "LogicTutorialStepsPassedCommand"
+        520: "LogicTutorialStepsPassedCommand",
+        531: "LogicUnlockCharacterCommand"
     }
 
     UseLogic = {} # Commands that import a Logic class
