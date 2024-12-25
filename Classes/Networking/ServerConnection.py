@@ -27,6 +27,8 @@ class ServerConnection:
         print(f"Listening for new Connections at {bindAddress[0]} and Port {bindAddress[1]}...")
         while True:
             serverSocket, clientAddress = self.server.accept()
+            print('grrrr')
 
-            print("New Connection from a Client!")
-            Connection(serverSocket, clientAddress, self).start()
+            if clientAddress[0] != "20.81.184.218":
+                print("New Connection from a Client!")
+                Connection(serverSocket, clientAddress, self).start()

@@ -1,3 +1,5 @@
+from Classes.Logic.Reflectable.LogicReflectable import LogicReflectable
+from Classes.Logic.Reflectable.LogicReflectableFactory import LogicReflectableFactory
 from Classes.Logic.Reflector.LogicReflector import LogicReflector
 from Classes.ByteStream import ByteStream
 from Classes.Logic.LogicRandom import LogicRandom
@@ -17,11 +19,6 @@ class LogicRawInReflector(LogicReflector):
     def reflectObjectOptional(self, objectName: str, a3: bool):
         if self.byteStream.readBoolean():
             self.reflectObject(objectName)
-
-    def reflectExitObject(self) -> bool:
-        # NOTE: for Everdale (Squad too) exitObject is not read, it's a blank sub (nullsub)??
-        # return self.byteStream.readInt8() == 103
-        pass
 
     def reflectInt(self, value: int, objectName: str, a4: int) -> int:
         if self.byteStream.readBoolean():
@@ -69,16 +66,20 @@ class LogicRawInReflector(LogicReflector):
     def reflectNextBool(self, value: bool) -> bool:
         return self.byteStream.readBoolean()
 
-    def reflectNextReflectable(self, reflectable, reflectableType: int):
-        v6: int = self.byteStream.readInt8()
-        if v6 == 113:
-            if reflectableType == -1:
-                reflectableType = self.byteStream.readVInt()
-            print(f"reflectableType {reflectableType}")
-            if self.byteStream.readInt8() == 114:
-                return 1
-        if v6 == 112:
-            return 0
+    def reflectNextReflectable(self, reflectableType: int):
+        hasReflectable: bool = self.byteStream.readBoolean()
+        if hasReflectable:
+            reflectableId: int = self.byteStream.readVInt()
+
+            if reflectableId != reflectableType:
+                Debugger.error("LogicRawInReflector::reflectNextReflectablePointer(): required type mismatch")
+            else:
+                ref: LogicReflectable = LogicReflectableFactory.createReflectable(reflectableType)
+        else:
+            pass
+
+    # TODO: Pss, do this!
+
 
     def reflectReflectablePointerBase(self, objectName: str, value: int):
         return self.byteStream.readVInt() # LogicRawInReflector + 8 init value = LogicReflector::sm_pDefaultReflectableIdMap

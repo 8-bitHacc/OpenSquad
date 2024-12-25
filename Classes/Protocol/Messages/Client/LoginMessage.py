@@ -5,6 +5,25 @@ from Classes.Protocol.Messages.Server.OwnHomeDataMessage import OwnHomeDataMessa
 class LoginMessage(PiranhaMessage):
     def __init__(self, payload):
         super().__init__(payload)
+        self.accountID: list = [0, 0]
+        self.accountToken: str = ""
+
+    def decode(self, receiver: dict):
+        self.accountID = self.readLong()
+        self.accountToken = self.readString()
+        self.readInt() # Major
+        self.readInt() # Minor
+        self.readInt() # Build
+        self.readString()
+        self.readString()
+        self.readString()
+        self.readString()
+        self.readString()
+        self.readLong()
+        self.readString()
+        self.readString()
+        self.readString()
+        self.readBoolean()
 
     def execute(self, receiver):
         ok = LoginOkMessage()

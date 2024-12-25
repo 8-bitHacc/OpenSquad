@@ -1,7 +1,9 @@
+from Classes.Logic.Reflectable.LogicReflectable import LogicReflectable
 from Classes.Logic.Reflector.LogicReflector import LogicReflector
 from Classes.ByteStream import ByteStream
 from Classes.Logic.LogicLong import LogicLong
 from Classes.Logic.LogicRandom import LogicRandom
+from Classes.Utilities.Debugger import Debugger
 
 
 class LogicRawOutReflector(LogicReflector):
@@ -84,3 +86,21 @@ class LogicRawOutReflector(LogicReflector):
 
     def reflectReflectablePointerBase(self, objectName: str, value: int = 0):
         self.byteStream.writeVInt(value) # :gene:
+
+    def reflectNextReflectable(self, reflectable: LogicReflectable, reflectableType: int, reflectableData) -> LogicReflectable:
+        #boolean = self.byteStream.writeBoolean
+
+        if reflectable is not None:
+            if not isinstance(reflectable, LogicReflectable): reflectable = reflectable()
+            self.byteStream.writeBoolean(True) # Has Reflectable
+
+            if reflectableType == -1:
+                self.byteStream.writeVInt(reflectable.getReflectableId())
+            elif reflectable.getReflectableId() != reflectableType:
+                Debugger.error("reflectNextReflectable - value type doesn't match required type")
+        else:
+            self.byteStream.writeBoolean(False)
+
+        reflectable.reflect(self, reflectableData)
+
+        return reflectable

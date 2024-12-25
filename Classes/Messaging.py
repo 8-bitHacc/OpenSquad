@@ -9,9 +9,8 @@ class Messaging:
         self.PepperCrypto: PepperEncrypter = PepperEncrypter()
         self.Mutex: Lock = Lock()
 
-    def readHeader(self, payloadBytes):
-        return [int.from_bytes(payloadBytes[:2], 'big', signed=True),
-                int.from_bytes(payloadBytes[2:5], 'big', signed=True)]
+    def readHeader(self, payloadBytes) -> tuple:
+        return int.from_bytes(payloadBytes[:2], 'big', signed=True), int.from_bytes(payloadBytes[2:5], 'big', signed=True)
 
     def writeHeader(self, packet: PiranhaMessage):
         header = (packet.getMessageType().to_bytes(2, 'big', signed=True)) + (len(packet.payload).to_bytes(3, 'big', signed=True)) + (packet.packetVersion.to_bytes(2, 'big', signed=True))

@@ -1,7 +1,8 @@
 from Classes.Instances.PlayerInstance import PlayerInstance
+from Classes.Logic.Reflectable.LogicReflectable import LogicReflectable
 from Classes.Logic.Reflector.LogicJSONOutReflector import LogicJSONOutReflector
 
-class LogicCharacterEntry:
+class LogicCharacterEntry(LogicReflectable):
 
     @classmethod
     def reflect(cls, reflector: LogicJSONOutReflector, player: PlayerInstance) -> None:

@@ -3,21 +3,22 @@ from Classes.Utilities.Debugger import Debugger
 from Classes.ByteStream.ByteStreamHelper import ByteStreamHelper
 from Classes.Logic.LogicLong import LogicLong
 
+
 class ByteStream:
     def __init__(self, payload):
-        self.payload = payload # 4, Buffer
-        self.messageLength = len(self.payload) # 20, Length
-        self.offset = 0 # 16, Offset
-        self.bitoffset = 0 # 6, Bitoffset
-    
+        self.payload = payload  # 4, Buffer
+        self.messageLength = len(self.payload)  # 20, Length
+        self.offset = 0  # 16, Offset
+        self.bitoffset = 0  # 6, Bitoffset
+
     def destruct(self):
         self.payload = None
         self.messageLength = 0
         self.offset = 0
         self.bitoffset = 0
-    
+
     def isCheckSumOnlyMode(self):
-        return False # return 0;
+        return False  # return 0;
 
     def writeHexa(self, data):
         if data:
@@ -29,8 +30,8 @@ class ByteStream:
             self.offset += len(base)
 
     # WIP TODO: writeStringReference
-    def writeStringReference(self, string = ""):
-        #super().writeStringReference(string)
+    def writeStringReference(self, string=""):
+        # super().writeStringReference(string)
         self.bitoffset = 0
         v4 = LogicStringUtil.getBytes(string)
         v6 = LogicStringUtil.getByteLength(v4)
@@ -41,10 +42,10 @@ class ByteStream:
         else:
             Debugger.log("warn", "ByteStream::writeStringReference invalid string length %d".format(v6))
             self.writeIntToByteArray(-1)
-    
+
     # TODO: writeString
     def writeString(self, string=None):
-        #super().writeString(string)
+        # super().writeString(string)
         if string is not None:
             v4 = LogicStringUtil.getBytes(string)
             v6 = LogicStringUtil.getByteLength(v4)
@@ -56,9 +57,10 @@ class ByteStream:
                 self.payload += v4
                 self.offset += v6
         else:
-            ByteStream.writeIntToByteArray(self, -1)        
+            ByteStream.writeIntToByteArray(self, -1)
 
-    # TODO: writeBoolean
+            # TODO: writeBoolean
+
     def writeBoolean(self, value: bool) -> bool:
         payload = list(self.payload)
         if self.bitoffset == 0:
@@ -72,9 +74,9 @@ class ByteStream:
 
     # TODO: writeInt
     def writeInt(self, value):
-        #super().writeInt(value)
+        # super().writeInt(value)
         self.writeIntToByteArray(value)
-    
+
     # TODO: writeInt8
     def writeInt8(self, value):
         self.bitoffset = 0
@@ -101,7 +103,7 @@ class ByteStream:
         payload.append(value & 0xFF)
         self.payload = bytes(payload)
         self.offset += 3
-    
+
     def writeIntLittleEndian(self, value):
         self.bitoffset = 0
         payload = list(self.payload)
@@ -133,7 +135,7 @@ class ByteStream:
 
     # TODO: writeShort
     def writeShort(self, short):
-        self.bitoffset = 0 # a1[6] = 0; a1 refers to the ByteStream class
+        self.bitoffset = 0  # a1[6] = 0; a1 refers to the ByteStream class
         newBuffer = list(self.payload)
         newBuffer.append(short >> 8 & 0xFF)
         newBuffer.append(short & 0xFF)
@@ -142,18 +144,18 @@ class ByteStream:
 
     # TODO: writeVInt
     def writeVInt(self, value):
-        #super().writeVInt(value)
+        # super().writeVInt(value)
         v2 = value
         self.bitoffset = 0
         data = b''
 
         if (v2 & 2147483648) != 0:
             if v2 >= -63:
-                data += (v2 & 0x3F | 0x40).to_bytes(1, 'big', signed=False)      
+                data += (v2 & 0x3F | 0x40).to_bytes(1, 'big', signed=False)
                 self.offset += 1
             elif v2 > -8192:
                 data += (v2 & 0x3F | 0xC0).to_bytes(1, 'big', signed=False)
-                data += ((v2 >> 6) & 0x7F).to_bytes(1, 'big', signed=False) 
+                data += ((v2 >> 6) & 0x7F).to_bytes(1, 'big', signed=False)
                 self.offset += 2
             elif v2 > -1048576:
                 data += (v2 & 0x3F | 0xC0).to_bytes(1, 'big', signed=False)
@@ -173,14 +175,14 @@ class ByteStream:
                 data += ((v2 >> 20) & 0x7F | 0x80).to_bytes(1, 'big', signed=False)
                 data += ((v2 >> 27) & 0x7F).to_bytes(1, 'big', signed=False)
                 self.offset += 5
-        
+
         else:
             if v2 <= 63:
                 data += (v2 & 0x3F).to_bytes(1, 'big', signed=False)
                 self.offset += 1
             elif v2 <= 0x2000:
                 data += (v2 & 0x3F | 0x80).to_bytes(1, 'big', signed=False)
-                data += ((v2 >> 6 ) & 0x7F).to_bytes(1, 'big', signed=False)
+                data += ((v2 >> 6) & 0x7F).to_bytes(1, 'big', signed=False)
                 self.offset += 2
             elif v2 <= 0x100000:
                 data += (v2 & 0x3F | 0x80).to_bytes(1, 'big', signed=False)
@@ -200,19 +202,19 @@ class ByteStream:
                 data += ((v2 >> 20) & 0x7F | 0x80).to_bytes(1, 'big', signed=False)
                 data += ((v2 >> 27) & 0xF).to_bytes(1, 'big', signed=False)
                 self.offset += 5
-        
+
         self.payload += data
 
     # TODO: writeVLong
     def writeVLong(self, high, low):
         raise DeprecationWarning("ByteStream::writeVLong is deprecated, use ByteStream::writeLogicLong instead.")
-        #self.writeVInt(high)
-        #self.writeVInt(low)
+        # self.writeVInt(high)
+        # self.writeVInt(low)
         # gay
-        
+
     # TODO: writeLongLong
     def writeLongLong(self, high, low):
-        #super().writeLongLong(high, low)
+        # super().writeLongLong(high, low)
         logicLong = LogicLong(high, low)
 
         self.writeIntToByteArray(logicLong.getHigherInt())
@@ -220,25 +222,25 @@ class ByteStream:
 
     def writeLogicLong(self, high, low):
         ByteStreamHelper.encodeLogicLong(self, high, low)
-    
+
     def readLogicLong(self) -> list:
         return ByteStreamHelper.decodeLogicLong(self)
 
     def isByteStream(self) -> bool:
-        return True # return 1;
+        return True  # return 1;
 
     def getLength(self) -> int:
         if self.offset < self.messageLength:
             return self.messageLength
-        
+
         return self.offset
-    
+
     def getOffset(self) -> int:
-        return self.offset # return *(_DWORD *)(a1 + 16);
-    
+        return self.offset  # return *(_DWORD *)(a1 + 16);
+
     def isAtEnd(self) -> bool:
         return self.offset > self.messageLength
-    
+
     def clear(self, a2):
         self.offset = 0
         self.bitoffset = 0
@@ -246,7 +248,7 @@ class ByteStream:
         self.payload = 0
         self.messageLength = a2
         self.payload = a2
-    
+
     def writeIntToByteArray(self, value):
         self.bitoffset = 0
         payload = list(self.payload)
@@ -279,10 +281,14 @@ class ByteStream:
                             b5 = self.payload[self.offset]
                             self.offset += 1
                             return r4 | (b5 << 0x1B) | 0x80000000
-                        else: return r4 | 0xF8000000
-                    else: return r3 | 0xFFF00000
-                else: return r2 | 0xFFFFE000
-            else: return b | 0xFFFFFFC0
+                        else:
+                            return r4 | 0xF8000000
+                    else:
+                        return r3 | 0xFFF00000
+                else:
+                    return r2 | 0xFFFFE000
+            else:
+                return b | 0xFFFFFFC0
         elif (b & 0x80) != 0:
             b2_ = self.payload[self.offset]
             self.offset += 1
@@ -300,9 +306,6 @@ class ByteStream:
                         self.offset += 1
                         return r | (b5_ << 0x1B)
         return r
-
-
-
 
     def readVIntb(self):
         offset = self.offset
@@ -346,7 +349,7 @@ class ByteStream:
                         self.offset = offset + 5
                         return result & 0x7FFFFFF | (self.payload[offset + 4] << 27)
 
-        return result  
+        return result
 
     def readInt(self) -> int:
         self.bitoffset = 0
@@ -359,7 +362,7 @@ class ByteStream:
 
     def readInt8(self) -> int:
         return self.readInt()
-    
+
     def readIntLittleEndian(self) -> int:
         self.bitoffset = 0
         result = (self.payload[self.offset])
@@ -368,7 +371,7 @@ class ByteStream:
         result += (self.payload[self.offset + 3] << 24)
         self.offset += 4
         return result
-    
+
     def readString(self, maxLength=900000) -> str:
         self.bitoffset = 0
         length = self.readInt()
@@ -383,26 +386,26 @@ class ByteStream:
         result = bytes(self.payload[self.offset:self.offset + length]).decode('utf-8')
         self.offset += length
         return result
-    
+
     def writeDataReference(self, High, Low=0):
         ByteStreamHelper.writeDataReference(self, High, Low)
-    
+
     def readDataReference(self) -> list:
         return ByteStreamHelper.readDataReference(self)
-    
+
     def readBoolean(self) -> bool:
-        v1 = self.bitoffset 
+        v1 = self.bitoffset
         v3 = self.offset + ((8 - v1) >> 3)
         self.offset = v3
         self.bitoffset = (v1 + 1) & 7
         return (1 & (1 << v1) & self.payload[self.offset - 1]) != 0
-    
+
     def readBytes(self, length, max=99999) -> bytes:
         self.bitoffset = 0
         if (length & 0x80000000) != 0:
             if length != -1:
                 pass
-                #Debugger.log("warning", "Negative readBytes length encountered.")
+                # Debugger.log("warning", "Negative readBytes length encountered.")
         elif length <= max:
             result = self.payload[self.offset:self.offset + length]
             self.offset += length
@@ -410,22 +413,22 @@ class ByteStream:
         else:
             Debugger.log("warning", f"readBytes too long array, max {max}")
         return b''
-         
+
     def writeLong(self, long: int, long1: int):
         logicLong = LogicLong(long, long1)
         logicLong.encode(self)
-    
+
     def readLong(self) -> list:
-        return [self.readInt(), self.readInt()] # High and Low
-    
+        return [self.readInt(), self.readInt()]  # High and Low
+
     def writeCompressedString(self, string=None):
         self.bitoffset = 0
         compressed = ByteStreamHelper.compress(self, string)
         self.payload += compressed
-    
+
     def readCompressedString(self) -> str:
         return ByteStreamHelper.decompress(self)
-    
+
     def readStringReference(self, max=900000) -> str:
         self.bitoffset = 0
         length = (self.payload[self.offset] << 24)
@@ -443,7 +446,7 @@ class ByteStream:
         result = bytes(self.payload[self.offset:self.offset + length]).decode('utf-8')
         self.offset += length
         return result
-    
+
     def readLongLong(self) -> list:
         self.bitoffset = 0
         high = (self.payload[self.offset] << 24)
@@ -460,14 +463,14 @@ class ByteStream:
 
     def writeBattlePlayerMap(self, playerMap):
         ByteStreamHelper.writeBattlePlayerMap(self, playerMap)
-    
+
     def readVLong(self):
         raise DeprecationWarning("ByteStream::readVLong is deprecated, use ByteStream::readLogicLong instead.")
-        #data = {}
-        #data["High"] = self.readVInt()
-        #data["Low"] = self.readVInt()
-        #return [data["High"], data["Low"]]
-    
+        # data = {}
+        # data["High"] = self.readVInt()
+        # data["Low"] = self.readVInt()
+        # return [data["High"], data["Low"]]
+
     def readBytesLength(self) -> int:
         self.bitoffset = 0
         result = (self.payload[self.offset] << 24)

@@ -1,5 +1,4 @@
 from Classes.Logic.LogicCompressedString import LogicCompressedString
-from Classes.Logic.Reflector.LogicRawInReflector import LogicRawInReflector
 from Classes.Protocol.LogicCommandManager import LogicCommandManager
 from Classes.Protocol.PiranhaMessage import PiranhaMessage
 from Classes.Utilities.Debugger import Debugger
@@ -7,7 +6,7 @@ from Classes.Utilities.Debugger import Debugger
 class EndClientTurnMessage(PiranhaMessage):
     def __init__(self, payload):
         super().__init__(payload)
-        self.compressed: bytes = None
+        self.compressed: bytes = b""
         self.accountID: list = [0, 0]
         self.checksum: int = 0
         self.commandsCount: int = 0

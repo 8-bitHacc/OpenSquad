@@ -8,7 +8,6 @@ class KeepAliveMessage(PiranhaMessage):
     def execute(self, receiver):
         keep = KeepAliveServerMessage()
         receiver["ClientConnection"].messaging.send(receiver, keep)
-        #receiver["ClientConnection"].messaging.send(receiver, shut)
 
-    def getMessageType(self):
+    def getMessageType(self) -> int:
         return 10108

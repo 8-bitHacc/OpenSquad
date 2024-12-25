@@ -1,8 +1,9 @@
+from Classes.Logic.Reflectable.LogicReflectable import LogicReflectable
 from Classes.Logic.Reflectable.LogicTimeObject import LogicTimeObject
 from Classes.Utilities.Preloader import Preloader
 from Classes.Logic.Reflector.LogicJSONOutReflector import LogicJSONOutReflector
 
-class LogicShopEntry:
+class LogicShopEntry(LogicReflectable):
 
     @classmethod
     def reflect(cls, reflector: LogicJSONOutReflector) -> None:

@@ -42,15 +42,11 @@ class Connection(Thread):
             while self.isAlive:
                 PacketHeader = self.client.recv(7)
                 if len(PacketHeader) >= 7:
-                    Header = self.messaging.readHeader(PacketHeader)
-                    self.PacketTimeout = time.time()
+                    header: tuple = self.messaging.readHeader(PacketHeader)
+                    self.PacketTimeout: float = time.time()
 
-                    PacketID: int = Header[0]
-
-                    PacketLength: int = Header[1]
+                    PacketID, PacketLength = header
                     PacketPayload: Union[bytes, bytearray] = self.messaging.PepperCrypto.decrypt(PacketID, bytes(self.recv(PacketLength)))
-
-                    #if PacketID == 16543: self.dumpMessage(PacketID, PacketPayload)
                             
                     self.messageManager.receiveMessage(PacketID, PacketPayload)
 
@@ -84,5 +80,5 @@ class Connection(Thread):
     def disconnect(self):
         self.isAlive = False
         print(f"Client disconnected! IP: {self.address[0]}")
-        ClientManager.removeClient(self.player.SessionKey)
+        #ClientManager.removeClient(self.player.SessionKey)
         self.client.close()

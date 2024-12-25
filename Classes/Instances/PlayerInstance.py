@@ -2,16 +2,16 @@
 
 class PlayerInstance:
     # Main Player Stats
-    HighID = 0
-    LowID = 1
-    AuthenticationToken = ""
-    Region = "GR"
+    HighID: int = 0
+    LowID: int = 1
+    AuthenticationToken: str | None = ""
+    #Region; str = "GR"
     SessionKey = ""
 
     # Main Player Items
-    Name = "8Hacc"
-    Registered = False
-    UnlockedCharacters = [
+    Name: str = "8Hacc"
+    Registered: bool = False
+    UnlockedCharacters: list = [
         {
             "id": 0,
         },
@@ -22,8 +22,8 @@ class PlayerInstance:
             "id": 4,
         }
     ]
-    UnlockedSkins = []
-    Quests = [{
+    UnlockedSkins: list = []
+    Quests: list = [{
         "id": 1,
         "progress": 4
     }]
