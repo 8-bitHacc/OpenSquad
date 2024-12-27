@@ -1,3 +1,4 @@
+from Classes.Protocol.Messages.Server.FriendListMessage import FriendListMessage
 from Classes.Protocol.PiranhaMessage import PiranhaMessage
 from Classes.Protocol.Messages.Server.LoginOkMessage import LoginOkMessage
 from Classes.Protocol.Messages.Server.OwnHomeDataMessage import OwnHomeDataMessage
@@ -28,8 +29,10 @@ class LoginMessage(PiranhaMessage):
     def execute(self, receiver):
         ok = LoginOkMessage()
         ohd = OwnHomeDataMessage()
+        fr = FriendListMessage()
         receiver["ClientConnection"].messaging.send(receiver, ok)
         receiver["ClientConnection"].messaging.send(receiver, ohd)
+        receiver["ClientConnection"].messaging.send(receiver, fr)
 
     def getMessageType(self):
         return 10101

@@ -87,20 +87,21 @@ class LogicRawOutReflector(LogicReflector):
     def reflectReflectablePointerBase(self, objectName: str, value: int = 0):
         self.byteStream.writeVInt(value) # :gene:
 
-    def reflectNextReflectable(self, reflectable: LogicReflectable, reflectableType: int, reflectableData) -> LogicReflectable:
+    def reflectNextReflectable(self, reflectable: LogicReflectable, reflectableType: int, reflectableData) -> LogicReflectable | None:
         #boolean = self.byteStream.writeBoolean
 
         if reflectable is not None:
-            if not isinstance(reflectable, LogicReflectable): reflectable = reflectable()
+            if not issubclass(reflectable, LogicReflectable): reflectable = reflectable()
             self.byteStream.writeBoolean(True) # Has Reflectable
 
             if reflectableType == -1:
                 self.byteStream.writeVInt(reflectable.getReflectableId())
             elif reflectable.getReflectableId() != reflectableType:
                 Debugger.error("reflectNextReflectable - value type doesn't match required type")
+
+            reflectable.reflect(self, reflectableData)
+            return reflectable
         else:
             self.byteStream.writeBoolean(False)
 
-        reflectable.reflect(self, reflectableData)
-
-        return reflectable
+        return None

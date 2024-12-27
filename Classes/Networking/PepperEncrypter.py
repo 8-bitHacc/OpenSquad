@@ -3,7 +3,6 @@ from hashlib import blake2b
 from _tweetnaclSquad import (crypto_box_afternm, crypto_box_beforenm, crypto_scalarmult_base, crypto_box_open_afternm,
                         crypto_hash, crypto_secretbox, crypto_secretbox_open)
 
-
 class Nonce:
     def __init__(self, nonce=None, clientKey=None, serverKey=None):
         if not clientKey:
@@ -26,7 +25,7 @@ class Nonce:
         return len(self._nonce)
 
     def increment(self):
-        self._nonce = (int.from_bytes(self._nonce, 'little') + 2).to_bytes(24, 'little')
+        self._nonce = (int.from_bytes(self._nonce, 'little') + 2).to_bytes(24, 'little') # using BOXBYTES is not needed, as we can just use 24
 
 
 class PepperEncrypter:

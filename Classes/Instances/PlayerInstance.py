@@ -23,7 +23,13 @@ class PlayerInstance:
         }
     ]
     UnlockedSkins: list = []
-    Quests: list = [{
+    emoteData: list[dict] = [
+        {"id": 0, "idx": 0},
+        {"id": 1, "idx": 1},
+        {"id": 2, "idx": 2},
+        {"id": 2, "idx": 2}
+    ]
+    Quests: list[dict] = [{
         "id": 1,
         "progress": 4
     }]

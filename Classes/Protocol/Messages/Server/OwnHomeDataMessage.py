@@ -30,7 +30,7 @@ class OwnHomeDataMessage(PiranhaMessage):
         self.writeBoolean(False)
         self.writeString(self.reflectJSON(receiver["Player"]))
 
-        self.writeLongLong(0, 1)
+        self.writeLongLong(0, 0)
         self.writeLongLong(0, 1)
         # end of sub_852248
 
@@ -39,15 +39,15 @@ class OwnHomeDataMessage(PiranhaMessage):
             self.writeLongLong(*receiver["Player"].getPlayerID()) # AvatarID
             self.writeLongLong(*receiver["Player"].getPlayerID()) # AvatarID
             self.writeStringReference(receiver["Player"].Name) # PlayerName
-            self.writeVInt(0)
+            self.writeVInt(3) # State
             self.writeBoolean(True) # Enables Tutorial State? (Shows hand pointing at "PLAY")
-            self.writeLongLong(0, 154) # what?
-            self.writeVInt(1) # dont know
-            self.writeVInt(0) # EXP League Tokens Collected
-            self.writeStringReference(None)
+            self.writeLongLong(0, 0) # Age ?
+            self.writeVInt(100) # EXP League Level
+            self.writeVInt(9999999) # EXP League Tokens Collected
+            self.writeStringReference()
             self.writeVInt(0) # Diamonds Count
-            self.writeVInt(2)
-            self.writeVInt(1)
+            self.writeVInt(0)
+            self.writeVInt(0)
             self.writeVInt(0) # Trophies Amount
 
             self.writeVInt(3) # Commodity Count
@@ -87,256 +87,6 @@ class OwnHomeDataMessage(PiranhaMessage):
     def getMessageType(self):
         return 24548
 
-    def getJSON(self) -> str:
-        return '''{
-  "shop": {
-    "id": 11,
-    "special": [
-      {
-        "id": 1,
-        "c": 5,
-        "a": 1,
-        "dd": 5200027,
-        "d": 300014,
-        "cr": 300000
-      },
-      {
-        "id": 2,
-        "c": 25,
-        "a": 5,
-        "dd": 5200028,
-        "d": 300014,
-        "cr": 300000
-      }
-    ],
-    "i": [
-      {
-        "id": 3,
-        "a": 1,
-        "bLimit": true,
-        "dd": 5200024,
-        "d": 4500006,
-        "cr": 300000
-      },
-      {
-        "id": 4,
-        "c": 5,
-        "a": 10,
-        "bLimit": true,
-        "dd": 5200010,
-        "d": 800000,
-        "cr": 300000
-      },
-      {
-        "id": 5,
-        "c": 5,
-        "a": 10,
-        "bLimit": true,
-        "dd": 5200010,
-        "d": 800004,
-        "cr": 300000
-      }
-    ],
-    "e": [
-      {
-        "id": 8,
-        "c": 20,
-        "a": 1,
-        "bLimit": true,
-        "dd": 5200021,
-        "d": 4200047,
-        "cr": 300012
-      },
-      {
-        "id": 7,
-        "c": 20,
-        "a": 1,
-        "bLimit": true,
-        "dd": 5200021,
-        "d": 4200115,
-        "cr": 300012
-      },
-      {
-        "id": 6,
-        "c": 40,
-        "a": 1,
-        "bLimit": true,
-        "dd": 5200022,
-        "d": 4200063,
-        "cr": 300012
-      }
-    ],
-    "s": [
-      {
-        "id": 11,
-        "c": 0,
-        "a": 1,
-        "bLimit": true,
-        "dd": 5200024,
-        "d": 4500002,
-        "cr": 69
-      },
-      {
-        "id": 10,
-        "c": 0,
-        "a": 1,
-        "bLimit": true,
-        "dd": 5200024,
-        "d": 4500002,
-        "cr": 69
-      },
-      {
-        "id": 9,
-        "c": 0,
-        "a": 1,
-        "bLimit": true,
-        "dd": 5200019,
-        "d": 5500067,
-        "cr": 69
-      }
-    ],
-    "t": {
-      "t": 1000
-    }
-  },
-  "eventManager": {
-    "purchaseCounts": {}
-  },
-  "tick": 33517122184,
-  "global_t": 33517115968,
-  "rnd": 0,
-  "newEv": [],
-  "skins": [
-    5500004
-  ],
-  "emos": [
-    4200000,
-    4200001,
-    4200002,
-    4200003,
-    4200004,
-    4200005,
-    4200006,
-    4200007,
-    4200008,
-    4200009,
-    4200038
-  ],
-  "newEmos": [
-    4200038
-  ],
-  "selEmos": [
-    4200000,
-    4200004,
-    4200008,
-    4200003
-  ],
-  "milestones": [
-    4700000,
-    4700001,
-    4700002,
-    4700003
-  ],
-  "exp_league_premium": [],
-  "ver": 5,
-  "gemRew": [
-    6200000
-  ],
-  "gemT": {
-    "t": 10
-  },
-  "lootLimitT": {
-    "t": 10
-  },
-  "lootLimitUnused": 20000,
-  "gemRewardTokenSequence": 100,
-  "plazaRewardT": {
-    "t": 20,
-    "p": true
-  },
-  "plazaChestT": {
-    "t": 69746,
-    "p": true
-  },
-  "chars": {
-    "c": [
-      {
-        "data": 800000,
-        "abLvl": -1
-      },
-      {
-        "data": 800004,
-        "abLvl": -1
-      },
-      {
-        "data": 800002,
-        "skin": 5500004,
-        "pts": 69,
-        "abLvl": -1,
-        "useCount": 1
-      }
-    ],
-    "s": [
-      {
-        "d": 2700000
-      },
-      {
-        "d": 2700002
-      },
-      {
-        "d": 2700006
-      }
-    ],
-    "seen": [
-      65695,
-      0
-    ],
-    "lastUnlock": 800002
-  },
-  "quests": {
-    "questProgress": [
-      {
-        "questData": 6300062,
-        "seen": true
-      },
-      {
-        "questData": 6300063,
-        "seen": true
-      },
-      {
-        "questData": 6300066,
-        "seen": true
-      }
-    ],
-    "t": {
-      "t": -1,
-      "p": true
-    },
-    "tr": {
-      "t": -1,
-      "p": true
-    },
-    "allowedOverflow": 3,
-    "newbQuestsProgress": 3
-  },
-  "tutorials": {
-    "tut": [
-      5000000,
-      5000001,
-      5000002,
-      5000003,
-      5000004,
-      5000005,
-      5000006,
-      5000007,
-      5000008,
-      5000009,
-      5000018
-    ]
-  },
-  "pProg": 5,
-  "sEvent": 2
-}'''
     def reflectJSON(self, player: PlayerInstance):
         reflected = LogicJSONOutReflector({}) # Start off with base data
 
@@ -430,7 +180,7 @@ class OwnHomeDataMessage(PiranhaMessage):
         # Tutorials
         reflected.reflectObject("tutorials")
         reflected.reflectArray(1, "tut")
-        reflected.reflectNextInt([5000000, 5000001, 5000002, 5000003, 5000004, 5000005, 5000006, 5000007, 5000008, 5000009, 5000012, 5000012])
+        reflected.reflectNextInt([5000000, 5000001, 5000002, 5000003, 5000004, 5000005, 5000006, 5000007, 5000008, 5000009, 5000012])
         reflected.reflectExitArray()
         reflected.reflectExitObject()
 

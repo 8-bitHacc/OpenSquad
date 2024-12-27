@@ -6,9 +6,9 @@ class GlobalID:
         return a2 % 1000000 + 1000000 * a1
     
     @staticmethod   
-    def getInstanceID(a1: int):
-        return a1 - 1000000 * (a1 / 16960)
+    def getInstanceID(a1: int) -> int:
+        return a1 % 100000
     
     @staticmethod
-    def getClassID(a1: int):
-        return a1 / 1000000
+    def getClassID(a1: int) -> int:
+        return int(a1 / 100000)
