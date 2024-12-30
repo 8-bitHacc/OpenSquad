@@ -1,11 +1,19 @@
 {
-  "s": [
+  "special": [
     {
       "index": 1,
       "cost": 1,
       "amount": 1,
-      "offerID": 21,
-      "itemID": 4200023,
+      "offerID": 13,
+      "itemID": 800000,
+      "resourceID": 1
+    },
+    {
+      "index": 1,
+      "cost": 1,
+      "amount": 1,
+      "offerID": 13,
+      "itemID": 800004,
       "resourceID": 1
     }
   ]

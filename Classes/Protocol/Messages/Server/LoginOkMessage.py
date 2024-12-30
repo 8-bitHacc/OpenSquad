@@ -7,6 +7,7 @@ class LoginOkMessage(PiranhaMessage):
         self.packetVersion = 1
 
     def encode(self, receiver):
+        print("encode wtaihdasigf")
         self.writeLong(0, 1)  # HomeID
         self.writeLong(0, 1)  # AccountID
         self.writeString("SquadBusters")  # AccountToken

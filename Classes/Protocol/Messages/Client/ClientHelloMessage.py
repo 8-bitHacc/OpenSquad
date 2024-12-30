@@ -35,7 +35,7 @@ class ClientHelloMessage(PiranhaMessage):
         elif not self.checkValidation():
             l = LoginFailedMessage()
             l.setErrorCode(1)
-            l.setMessage("You shouldn't be here")
+            l.setMessage(":)")
             receiver["ClientConnection"].messaging.send(receiver, l)
 
         elif self.major != self.settings["CurrentMajor"]:

@@ -10,8 +10,9 @@ class LogicServerCommand(LogicCommand):
     def encode(self, receiver) -> LogicRawOutReflector:
         rawOut = LogicRawOutReflector(self)
 
+        self.writeVInt(self.getCommandType())
         super().encode(receiver)
-        rawOut.reflectInt(self.getCommandType(), "id", 0)
+        rawOut.reflectInt(1, "id", 0)
         if self.getCommandType() == -1:
             Debugger.error("LogicServerCommand::reflect() id is not set!")
 

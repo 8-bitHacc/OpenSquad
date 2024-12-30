@@ -13,9 +13,9 @@ class LogicShopEntry(LogicReflectable):
 
         reflector.reflectInt(sum(len(offers.get(category, [])) for category in ["special", "i", "e", "s"]), "id", 0)
 
-        #if reflector.reflectArray(len(offers.get("special", [])), "special", False) != 0:
-            #for offer in offers["special"]: cls.reflectOffer(reflector, offer)
-            #reflector.reflectExitArray()
+        if reflector.reflectArray(len(offers.get("special", [])), "special", False) != 0:
+            for offer in offers["special"]: cls.reflectOffer(reflector, offer)
+            reflector.reflectExitArray()
 
         if reflector.reflectArray(len(offers.get("i", [])), "i", False) != 0:
             for offer in offers["i"]: cls.reflectOffer(reflector, offer)

@@ -1,4 +1,5 @@
 from Classes.Logic.LogicCompressedString import LogicCompressedString
+from Classes.Protocol.Commands.LogicCommand import LogicCommand
 from Classes.Protocol.LogicCommandManager import LogicCommandManager
 from Classes.Protocol.PiranhaMessage import PiranhaMessage
 from Classes.Utilities.Debugger import Debugger
@@ -39,6 +40,7 @@ class EndClientTurnMessage(PiranhaMessage):
                     print(
                         f"[EndClientTurnMessage::] Skipped unimplemented command with type: {commandID}, {LogicCommandManager.getCommandName(commandID)}")
             else:
+                LogicCommand(self.payload).decode(self)
                 commandsLeft = self.commandsCount - (command + 1)
                 print(
                     f"[EndClientTurnMessage::] Skipped unimplemented command with type: {commandID} {''.join(f'(next {commandsLeft} command(s) might have trouble being decoded)' if commandsLeft != 0 else '')}")

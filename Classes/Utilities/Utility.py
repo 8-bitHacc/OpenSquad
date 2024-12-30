@@ -56,9 +56,8 @@ class Utility:
             return []
 
     @staticmethod
-    def createRandomToken(length: int = 40):
-        Token = "".join(random.choice(string.ascii_letters + string.digits) for i in range(length))
-        return Token
+    def createRandomToken(length: int = 40) -> str:
+        return "".join(random.choice(string.ascii_letters + string.digits) for i in range(length))
 
     @staticmethod
     def createRandomLongID():

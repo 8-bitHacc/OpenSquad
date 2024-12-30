@@ -2,10 +2,8 @@ import socket, time, traceback, os
 from threading import Thread
 from typing import Union
 from Classes.Messaging import Messaging
-
 from Classes.Instances.PlayerInstance import PlayerInstance
 from Classes.Messaging import Messaging
-from Classes.Protocol.LogicLaserMessageFactory import LogicLaserMessageFactory
 from Classes.Utilities.ClientManager import ClientManager
 from Classes.MessageManager import MessageManager
 
@@ -19,6 +17,7 @@ class Connection(Thread):
         self.messaging: Messaging = Messaging()
         self.isAlive: bool = True
         self.serverSession = server
+        self.db = self.serverSession.db
         self.messageManager: MessageManager = MessageManager(self)
 
     def recv(self, n) -> Union[bytes, bytearray]:
@@ -41,7 +40,7 @@ class Connection(Thread):
         try:
             while self.isAlive:
                 PacketHeader = self.client.recv(7)
-                if len(PacketHeader) >= 7:
+                if len(PacketHeader) == 7:
                     header: tuple = self.messaging.readHeader(PacketHeader)
                     self.PacketTimeout: float = time.time()
 
@@ -80,5 +79,5 @@ class Connection(Thread):
     def disconnect(self):
         self.isAlive = False
         print(f"Client disconnected! IP: {self.address[0]}")
-        #ClientManager.removeClient(self.player.SessionKey)
+        ClientManager.removeClient(self.player.SessionKey)
         self.client.close()

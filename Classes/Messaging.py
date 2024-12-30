@@ -1,7 +1,7 @@
 import traceback
 from Classes.Utilities.ClientManager import ClientManager
 from Classes.Protocol.PiranhaMessage import PiranhaMessage
-from Classes.Networking.PepperEncrypter import PepperEncrypter
+from Classes.Networking.PepperEncrypter import PepperEncrypter, PepperState
 from threading import Lock
 
 class Messaging:
@@ -32,7 +32,7 @@ class Messaging:
             print("[Messaging::send] You can't send client packets!")
             return
 
-        if receiver is not None and self.PepperCrypto.authenticated == False:
+        if receiver is not None and self.PepperCrypto.state == PepperState.PEPPER_AUTH:
             if messageID not in [20100, 20103]:
                 receiver["ClientConnection"].disconnect()
                 return
@@ -43,6 +43,7 @@ class Messaging:
                     packet.encode(receiver)
                 else:
                     print("RECEIVER NULL")
+
                 with self.Mutex:
                     packet.payload = self.PepperCrypto.encrypt(messageID, packet.payload)
                     try:

@@ -1,17 +1,19 @@
-import traceback
 
+from Classes.Protocol.Messages.Server.TitanDisconnectedMessage import TitanDisconnectedMessage
 
 class ClientManager:
     clients = {}
 
     @classmethod
-    def insertClient(cls, sessionKey, connection, playerid):
+    def insertClient(cls, sessionKey: str, connection, playerid: list):
         try:
             if cls.checkForSession(playerid)[0] is not None:
                 if playerid == [0, 0]: return
                 data = cls.checkForSession(playerid)
+                c = TitanDisconnectedMessage()
+                data[1]["Connection"].messaging.send({}, c)
                 cls.removeClient(data[0])
-            cls.clients[sessionKey] = {"Connection": connection, "PlayerID": playerid, "SessionKey": sessionKey}
+            cls.clients[sessionKey] = {"Connection": connection, "PlayerID": playerid, "PlayerInstance": connection.player, "SessionKey": sessionKey}
         except Exception:
             pass
 
@@ -27,29 +29,18 @@ class ClientManager:
         return len(cls.clients)
 
     @classmethod
-    def checkForSession(cls, SpecificUserID):
+    def checkForSession(cls, SpecificUserID: list) -> tuple[str, dict] | tuple[None, None]:
         try:
             for SessionKey, SessionData in cls.clients.items():
                 if SessionData["PlayerID"] == SpecificUserID:
                     return SessionKey, SessionData  # Return the data
             return None, None  # If session is not found, return None
         except:
-            print(traceback.format_exc())
+            print("Error at checkingSession")
             return None, None  # Handle any exceptions and return None
 
     @classmethod
-    def getAllClientSessionData(cls):
-        try:
-            Sessions = []
-            for SessionKey, SessionData in cls.clients.items():
-                Sessions.append(SessionData["Connection"])
-
-            return Sessions  # sorry for lazyness
-        except:
-            print(traceback.format_exc())
-
-    @classmethod
-    def getAllClientConnections(cls, type=None):
+    def getAllClientConnections(cls, type: str = None) -> list:
         try:
             Sessions = []
             for SessionKey, SessionData in cls.clients.items():
@@ -60,4 +51,5 @@ class ClientManager:
 
             return Sessions
         except:
-            print(traceback.format_exc())
+            print("error at getAllClientConnections")
+            return []

@@ -2,16 +2,25 @@
 
 class PlayerInstance:
     # Main Player Stats
-    HighID: int = 0
-    LowID: int = 1
+    ID: list = [0, 1]
     AuthenticationToken: str | None = ""
-    #Region; str = "GR"
-    SessionKey = ""
+    SessionKey: str = ""
 
     # Main Player Items
-    Name: str = "8Hacc"
-    Registered: bool = False
-    UnlockedCharacters: list = [
+    Name: str | None = "8Hacc"
+    registrationState: int = 3
+    expTokens: int = 199999999
+    trophies: int = 0
+    resources: list[dict[str, int]] = [
+        {
+            "val": 10
+        },
+        {
+            "id": 1,
+            "val": 10000
+        },
+    ]
+    UnlockedCharacters: list[dict[str, int]] = [
         {
             "id": 0,
         },
@@ -23,16 +32,28 @@ class PlayerInstance:
         }
     ]
     UnlockedSkins: list = []
-    emoteData: list[dict] = [
+    emoteData: list[dict[str, int]] = [
         {"id": 0, "idx": 0},
         {"id": 1, "idx": 1},
         {"id": 2, "idx": 2},
         {"id": 2, "idx": 2}
     ]
-    Quests: list[dict] = [{
+    Quests: list[dict[str, int]] = [{
         "id": 1,
         "progress": 4
     }]
 
-    def getPlayerID(self) -> list:
-        return [self.HighID, self.LowID]
+    def createDataEntry(self) -> dict:
+        return {"PlayerID": self.ID, "AuthenticationToken": self.AuthenticationToken} # TODO: Implement
+
+    def loadInstance(self, data: dict):
+        self.ID = data["PlayerID"]
+        self.Name = data.get("Name", None)
+        self.registrationState = data.get("regState", -1)
+        self.expTokens = data.get("expTokens", 0)
+        self.trophies = data.get("trophies", 0)
+        self.resources = data.get("resources", self.resources)
+        self.UnlockedCharacters = data.get("unlockedCharacters", self.UnlockedCharacters)
+        self.UnlockedSkins = data.get("unlockedSkins", [])
+        self.emoteData = data.get("emoteData", self.emoteData)
+        self.Quests = data.get("quests", [])
