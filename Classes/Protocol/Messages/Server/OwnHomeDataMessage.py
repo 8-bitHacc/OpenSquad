@@ -182,4 +182,4 @@ class OwnHomeDataMessage(PiranhaMessage):
 
         reflected.reflectInt(1, "sEvent", 0)
 
-        return json.dumps(reflected.jsonData, ensure_ascii=False)
+        return json.dumps(reflected.jsonData)
