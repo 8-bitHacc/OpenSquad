@@ -79,5 +79,5 @@ class Connection(Thread):
     def disconnect(self):
         self.isAlive = False
         print(f"Client disconnected! IP: {self.address[0]}")
-        ClientManager.removeClient(self.player.SessionKey)
+        ClientManager.removeClient(self.player.sessionKey)
         self.client.close()

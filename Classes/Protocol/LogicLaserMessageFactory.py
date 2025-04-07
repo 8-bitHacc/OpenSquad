@@ -42,7 +42,6 @@ class LogicLaserMessageFactory:
         18856: "ClientInputMessage",
         29997: "CryptoErrorMessage",
         24403: "LeaderboardMessage",
-        24101: "OwnHomeDataMessage",
         20100: "ServerHelloMessage",
         10501: "AcceptFriendMessage",
         24301: "AllianceDataMessage",
@@ -461,10 +460,8 @@ class LogicLaserMessageFactory:
         messagesList = LogicLaserMessageFactory.PacketIDs
         if LogicLaserMessageFactory.MessageExists(messageType):
             if type(messagesList[messageType]) is not str:
-                print(f"MessageID: {messageType}, {LogicLaserMessageFactory.getMessageName(messageType)} created")
                 return messagesList[messageType](messagePayload)
             else:
-                print(f"MessageID: {messageType}, {LogicLaserMessageFactory.getMessageName(messageType)} skipped")
+                return PiranhaMessage(b"")
         else:
-            print(messageType, "skipped")
             return PiranhaMessage(b"")

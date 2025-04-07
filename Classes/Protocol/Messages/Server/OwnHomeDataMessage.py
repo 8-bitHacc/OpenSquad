@@ -13,14 +13,13 @@ import json, random
 class OwnHomeDataMessage(PiranhaMessage):
     def __init__(self, payload=b''):
         super().__init__(payload)
-        self.packetVersion = 0
 
     def encode(self, receiver):
-        self.writeLongLong(0, 1)
+        self.writeLongLong(*receiver["Player"].accountID)
 
         # sub_852248
-        self.writeLongLong(0, 1)
-        self.writeInt(1399183669)
+        self.writeLongLong(*receiver["Player"].accountID)
+        self.writeInt(int(time.time()))
         # Constructs reflector and encodes reflectableArrays "w" and "dm"
         base = b'\x02\xe7\x11\x89\xd4a\x92\xd4a\x95\xd4a\x96\xd4a\xae\xd4a\x80\xd4a\x81\xd4a\x82\xd4a\x83\xd4a\x84\xd4a\x87\xd4a\x90\xd4a\x93\xd4a\xa0\xd4a\x86\xd4a\x88\xd4a\xa6\xd4a\x04\xa9\xcb\xc9\x02\xa2\xcb\xc9\x02\xa0\xcb\xc9\x02\xa6\xcb\xc9\x02\x00\x00\x00\x17ds3_ExpLeagueGrasslands\x8a\xbe\x92\x01\xbf\xa7\xd6\xb9\x07\xa0\xeem\x11\x89\xd4a\x92\xd4a\x95\xd4a\x96\xd4a\xae\xd4a\x80\xd4a\x81\xd4a\x82\xd4a\x83\xd4a\x84\xd4a\x87\xd4a\x90\xd4a\x93\xd4a\xa0\xd4a\x86\xd4a\x88\xd4a\xa6\xd4a\x04\xa2\xcb\xc9\x02\xa6\xcb\xc9\x02\xa9\xcb\xc9\x02\xa0\xcb\xc9\x02\x00\x00\x00\x1ads1Duo_ExpLeagueGrasslands\x8e\xbe\x92\x01\xf0\xca\xd3\xdc\t\xa0\xeem'
 
@@ -28,7 +27,7 @@ class OwnHomeDataMessage(PiranhaMessage):
         self.offset += base.__len__()
 
         self.writeBoolean(False)
-        self.writeString(self.reflectJSON(receiver["Player"]))
+        self.writeString(self.reflectJSON(receiver["Player"], receiver["ClientConnection"].serverSession.preloader.offers))
 
         self.writeLongLong(0, 0)
         self.writeLongLong(0, 1)
@@ -36,13 +35,13 @@ class OwnHomeDataMessage(PiranhaMessage):
 
         if self.writeBoolean(True): # crashes if false
             # LogicClientAvatar::encode
-            self.writeLongLong(*receiver["Player"].ID) # AvatarID
-            self.writeLongLong(*receiver["Player"].ID) # AvatarID
-            self.writeStringReference(receiver["Player"].Name) # PlayerName
+            self.writeLongLong(*receiver["Player"].accountID) # AvatarID
+            self.writeLongLong(*receiver["Player"].accountID) # AvatarID
+            self.writeStringReference(receiver["Player"].name) # PlayerName
             self.writeVInt(receiver["Player"].registrationState) # State
             self.writeBoolean(True) # Enables Tutorial State
             self.writeLongLong(0, 1) # Age ?
-            self.writeVInt(50) # EXP League Level
+            self.writeVInt(2) # EXP League Level
             self.writeVInt(receiver["Player"].expTokens) # EXP League Tokens Collected
             self.writeStringReference("Male")
             self.writeVInt(receiver["Player"].resources[0]["val"]) # Diamonds Count
@@ -83,10 +82,10 @@ class OwnHomeDataMessage(PiranhaMessage):
     def getMessageType(self):
         return 24548
 
-    def reflectJSON(self, player: PlayerInstance):
+    def reflectJSON(self, player: PlayerInstance, shop: dict):
         reflected = LogicJSONOutReflector({}) # Start off with base data
 
-        LogicShopEntry.reflect(reflected)
+        LogicShopEntry.reflect(reflected, shop)
 
         # EventManager
         reflected.reflectObject("eventManager")
@@ -100,8 +99,8 @@ class OwnHomeDataMessage(PiranhaMessage):
         reflected.reflectInt(timer, "globalTick", 0)
         reflected.reflectRandom(LogicRandom(random.randint(1000, 10000)), "rnd")
 
-        if reflected.reflectArray(0, "skins") != 0:
-            reflected.reflectNextInt(player.UnlockedSkins)
+        if reflected.reflectArray(1 if player.skins else 0, "skins") != 0:
+            reflected.reflectNextInt(player.skins)
             reflected.reflectExitArray()
 
         # LABEL_30
@@ -171,7 +170,7 @@ class OwnHomeDataMessage(PiranhaMessage):
         reflected.reflectExitObject()
 
         # Quests
-        LogicQuestEntry.reflect(reflected, player.Quests)
+        LogicQuestEntry.reflect(reflected, player.quests)
 
         # Tutorials
         reflected.reflectObject("tutorials")
@@ -182,4 +181,4 @@ class OwnHomeDataMessage(PiranhaMessage):
 
         reflected.reflectInt(1, "sEvent", 0)
 
-        return json.dumps(reflected.jsonData)
+        return json.dumps(reflected.jsonData, ensure_ascii=False)

@@ -1,15 +1,12 @@
 from Classes.Logic.Reflectable.LogicReflectable import LogicReflectable
 from Classes.Logic.Reflectable.LogicTimeObject import LogicTimeObject
-from Classes.Utilities.Preloader import Preloader
 from Classes.Logic.Reflector.LogicJSONOutReflector import LogicJSONOutReflector
 
 class LogicShopEntry(LogicReflectable):
 
     @classmethod
-    def reflect(cls, reflector: LogicJSONOutReflector) -> None:
+    def reflect(cls, reflector: LogicJSONOutReflector, offers: dict) -> None:
         reflector.reflectObject("shop")
-
-        offers = Preloader.offers
 
         reflector.reflectInt(sum(len(offers.get(category, [])) for category in ["special", "i", "e", "s"]), "id", 0)
 

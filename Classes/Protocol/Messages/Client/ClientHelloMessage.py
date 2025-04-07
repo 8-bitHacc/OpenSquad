@@ -6,7 +6,7 @@ from Classes.Utilities.Preloader import Preloader
 class ClientHelloMessage(PiranhaMessage):
     def __init__(self, payload):
         super().__init__(payload)
-        self.settings: dict = Preloader.ConfigurationData
+        self.settings: dict = None
         self.protocol: int = 0
         self.keyVersion: int = 0
         self.major: int = 0
@@ -27,7 +27,8 @@ class ClientHelloMessage(PiranhaMessage):
         self.appStore = self.readInt()
 
     def execute(self, receiver):
-        if self.settings["Maintenance"] != 0:
+        self.settings = receiver["ClientConnection"].serverSession.preloader.configuration
+        if self.settings["maintenance"] != 0:
             l = LoginFailedMessage()
             l.setErrorCode(10)
             receiver["ClientConnection"].messaging.send(receiver, l)
@@ -38,18 +39,18 @@ class ClientHelloMessage(PiranhaMessage):
             l.setMessage(":)")
             receiver["ClientConnection"].messaging.send(receiver, l)
 
-        elif self.major != self.settings["CurrentMajor"]:
-            l = LoginFailedMessage()
-            l.setErrorCode(8)
-            l.setMessage("A new version of the private server is available!")
-            l.setUpdateURL("https://mega.nz/file/m4c0nSyK#_YNLSBuGsO8sTjJ1Q6ANxCwPYXOMhdmXrzRtxlIMwKM")
-            receiver["ClientConnection"].messaging.send(receiver, l)
+        #elif self.major != self.settings["CurrentMajor"]:
+            #l = LoginFailedMessage()
+            #l.setErrorCode(8)
+            #l.setMessage("A new version of the private server is available!")
+            #l.setUpdateURL("https://mega.nz/file/m4c0nSyK#_YNLSBuGsO8sTjJ1Q6ANxCwPYXOMhdmXrzRtxlIMwKM")
+            #receiver["ClientConnection"].messaging.send(receiver, l)
 
-        elif self.contentHash != self.settings["ContentHash"]:
-            l = LoginFailedMessage()
-            l.setErrorCode(7)
-            l.setCompressedFingerprint(b"") # TODO: Add content update system
-            receiver["ClientConnection"].messaging.send(receiver, l)
+        #elif self.contentHash != self.settings["ContentHash"]:
+            #l = LoginFailedMessage()
+            #l.setErrorCode(7)
+            #l.setCompressedFingerprint(b"") # TODO: Add content update system
+            #receiver["ClientConnection"].messaging.send(receiver, l)
         else:
             serverHello = ServerHelloMessage()
             receiver["ClientConnection"].messaging.send(receiver, serverHello)
@@ -58,6 +59,6 @@ class ClientHelloMessage(PiranhaMessage):
         return 10100
 
     def checkValidation(self) -> bool:
-        if self.protocol != 1: return False
-        elif self.keyVersion != 1: return False
+        #if self.protocol != 1: return False
+        #elif self.keyVersion != 1: return False
         return True

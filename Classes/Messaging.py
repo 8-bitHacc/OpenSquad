@@ -80,7 +80,7 @@ class Messaging:
                                 ClientManager.removeClient(sessiondata["SessionKey"])
                                 userConn.isAlive = False
 
-            print(f"MessageID: {messageID}, {packet.__class__.__name__} sent")
+            print(f"[Messaging::send] Sent message {packet.__class__.__name__} ({messageID})")
 
         except:
             traceback.print_exc()

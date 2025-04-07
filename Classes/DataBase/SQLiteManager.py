@@ -1,6 +1,5 @@
 import sqlite3, json, traceback
 from threading import Lock
-from Classes.Instances.PlayerInstance import PlayerInstance
 
 class SQLiteManager:
     def __init__(self):
@@ -9,16 +8,17 @@ class SQLiteManager:
         self.cursor: sqlite3.Cursor = self.connection.cursor()
         self.mutex: Lock = Lock()
         try:
-            self.connection.execute(f"CREATE TABLE IF NOT EXISTS playerTable (HighID integer, LowID integer, AuthenticationToken text, Data json)")
+            self.connection.execute(f"CREATE TABLE IF NOT EXISTS playerTable (high integer, low integer, accountToken text, data json)")
         except (sqlite3.ProgrammingError, Exception) as e:
             print(f"An exception has occurred while trying to set up the playerTable database. Error: {e}")
+        self.currentID: list = self.incrementID()
 
     def createEntry(self, auth: str, data: dict):
         """Creates an entry to the database and updates it"""
         self.mutex.acquire()
         try:
-            self.cursor.execute(f"INSERT INTO playerTable (HighID, LowID, AuthenticationToken, Data) VALUES (?, ?, ?, ?)",
-                                (*data["PlayerID"], auth, json.dumps(data, ensure_ascii=False)))
+            self.cursor.execute(f"INSERT INTO playerTable (high, low, accountToken, data) VALUES (?, ?, ?, ?)",
+                                (*data["id"], auth, json.dumps(data, ensure_ascii=False)))
             self.connection.commit()
         except (sqlite3.ProgrammingError, Exception) as e:
             print(f"An exception has occurred while trying to create an entry. Error: {e}")
@@ -28,7 +28,7 @@ class SQLiteManager:
     def getEntry(self, auth: str, acMutex: bool = True) -> dict:
         if acMutex: self.mutex.acquire()
         try:
-            self.cursor.execute("SELECT Data FROM playerTable WHERE AuthenticationToken = ?", (auth,))
+            self.cursor.execute("SELECT data FROM playerTable WHERE accountToken = ?", (auth,))
             return json.loads(self.cursor.fetchone()[0])
         except (sqlite3.ProgrammingError, Exception) as e:
             print(f"An exception has occurred while trying to get an entry. Error: {e}")
@@ -42,7 +42,7 @@ class SQLiteManager:
                 if data is None: entry = self.getEntry(auth, False)
                 else:
                     entry = data
-                    auth = data["AuthenticationToken"]
+                    auth = data["token"]
 
                 if isinstance(item, list):
                     for i, key in enumerate(list): entry[key] = value[i]
@@ -51,7 +51,7 @@ class SQLiteManager:
 
                 entry = {key: value for key, value in entry.items() if value not in [None, "", {}, [], False, 0]}
 
-                self.cursor.execute("UPDATE playerTable SET Data = ? WHERE AuthenticationToken = ?", (json.dumps(entry, ensure_ascii=False), auth,))
+                self.cursor.execute("UPDATE playerTable SET data = ? WHERE accountToken = ?", (json.dumps(entry, ensure_ascii=False), auth,))
                 self.connection.commit()
             except (sqlite3.ProgrammingError, Exception) as e:
                 print(traceback.print_exc())
@@ -60,20 +60,8 @@ class SQLiteManager:
     def incrementID(self):
         with self.mutex:
             try:
-                self.cursor.execute("SELECT HighID, LowID FROM playerTable ORDER BY HighID DESC, LowID DESC")
-                result = self.cursor.fetchone()
-
-                if result:
-                    HighID, LowID = result
-                    LowID += 1
-
-                    if LowID % 100 == 0:
-                        HighID += 1
-                        LowID = LowID
-
-                else:
-                    HighID, LowID = 0, 1
-
+                self.cursor.execute("SELECT high, low FROM playerTable ORDER BY high DESC, low DESC")
+                HighID, LowID = self.cursor.fetchone()
                 return [HighID, LowID]
             except:
                 print('erro')

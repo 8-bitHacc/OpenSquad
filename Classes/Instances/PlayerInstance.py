@@ -2,13 +2,13 @@
 
 class PlayerInstance:
     # Main Player Stats
-    ID: list = [0, 1]
-    AuthenticationToken: str | None = ""
-    SessionKey: str = ""
+    accountID: list[int] = []
+    accountToken: str | None = None
+    sessionKey: str = None
 
     # Main Player Items
-    Name: str | None = "8Hacc"
-    registrationState: int = 3
+    name: str | None = None
+    registrationState: int = -1
     expTokens: int = 199999999
     trophies: int = 0
     resources: list[dict[str, int]] = [
@@ -20,7 +20,7 @@ class PlayerInstance:
             "val": 10000
         },
     ]
-    UnlockedCharacters: list[dict[str, int]] = [
+    members: list[dict[str, int]] = [
         {
             "id": 0,
         },
@@ -31,29 +31,29 @@ class PlayerInstance:
             "id": 4,
         }
     ]
-    UnlockedSkins: list = []
-    emoteData: list[dict[str, int]] = [
+    skins: list = []
+    emotes: list[dict[str, int]] = [
         {"id": 0, "idx": 0},
         {"id": 1, "idx": 1},
         {"id": 2, "idx": 2},
         {"id": 2, "idx": 2}
     ]
-    Quests: list[dict[str, int]] = [{
-        "id": 1,
+    quests: list[dict[str, int]] = [{
+        "id": 94,
         "progress": 4
     }]
 
     def createDataEntry(self) -> dict:
-        return {"PlayerID": self.ID, "AuthenticationToken": self.AuthenticationToken} # TODO: Implement
+        return {"id": self.accountID, "token": self.accountToken, "name": self.name, "regState": self.registrationState}
 
     def loadInstance(self, data: dict):
-        self.ID = data["PlayerID"]
-        self.Name = data.get("Name", None)
+        self.accountID = data["id"]
+        self.name = data.get("name", None)
         self.registrationState = data.get("regState", -1)
         self.expTokens = data.get("expTokens", 0)
         self.trophies = data.get("trophies", 0)
         self.resources = data.get("resources", self.resources)
-        self.UnlockedCharacters = data.get("unlockedCharacters", self.UnlockedCharacters)
-        self.UnlockedSkins = data.get("unlockedSkins", [])
-        self.emoteData = data.get("emoteData", self.emoteData)
-        self.Quests = data.get("quests", [])
+        self.members = data.get("members", self.members)
+        self.skins = data.get("skins", [])
+        self.emotes = data.get("emotes", self.emotes)
+        self.quests = data.get("quests", [])

@@ -16,6 +16,7 @@ class EndClientTurnMessage(PiranhaMessage):
     def decode(self, receiver):
         compressedString = LogicCompressedString()
         self.compressed = compressedString.decode(self)
+        print(self.compressed)
         self.accountID = self.readLongLong()
         self.checksum = self.readInt()
 

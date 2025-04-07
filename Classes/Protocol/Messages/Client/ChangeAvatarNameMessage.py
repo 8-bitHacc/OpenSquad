@@ -1,6 +1,5 @@
+from Classes.Protocol.Messages.Server.SetAvatarNameResponseMessage import SetAvatarNameResponseMessage
 from Classes.Protocol.PiranhaMessage import PiranhaMessage
-from Classes.Protocol.Messages.Server.AvailableServerCommandMessage import AvailableServerCommandMessage
-from Classes.Protocol.Commands.Server.LogicChangeAvatarNameCommand import LogicChangeAvatarNameCommand
 
 class ChangeAvatarNameMessage(PiranhaMessage):
     def __init__(self, payload):
@@ -11,11 +10,11 @@ class ChangeAvatarNameMessage(PiranhaMessage):
         self.name = self.readString()
 
     def execute(self, receiver):
-        print(self.name)
-        av = AvailableServerCommandMessage()
-        l = LogicChangeAvatarNameCommand()
-        l.setName(self.name)
-        av.setCommand(l)
+        receiver["Player"].name = self.name
+        receiver["Player"].registrationState = 3
+        receiver["ClientConnection"].db.createEntry(receiver["Player"].accountToken,
+                                                      receiver["Player"].createDataEntry())
+        av = SetAvatarNameResponseMessage()
         receiver["ClientConnection"].messaging.send(receiver, av)
 
     def getMessageType(self):

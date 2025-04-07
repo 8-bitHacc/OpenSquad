@@ -7,10 +7,9 @@ class AvailableServerCommandMessage(PiranhaMessage):
         self.command: LogicServerCommand = None
 
     def encode(self, receiver):
-        self.writeVInt(1)
+        self.writeVInt(self.command.getCommandType())
 
         self.command.encode(receiver)
-
         self.payload += self.command.payload
 
     def getMessageType(self) -> int:

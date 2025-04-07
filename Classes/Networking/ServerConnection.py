@@ -3,6 +3,8 @@ from Classes.DataBase.SQLiteManager import SQLiteManager
 from Classes.Networking.Connection import Connection
 from Classes.Protocol.LogicLaserMessageFactory import LogicLaserMessageFactory
 from Classes.Protocol.LogicCommandManager import LogicCommandManager
+from Classes.Utilities.Preloader import Preloader
+
 
 class ServerConnection:
     def __init__(self, bindAddress):
@@ -17,6 +19,9 @@ class ServerConnection:
 
         count = LogicCommandManager.loadAllCommands()
         print(f"[LogicCommandManager::] {count} commands loaded")
+
+        self.preloader = Preloader
+        self.environment: str = self.preloader.configuration["environment"]
 
         self.setup(bindAddress)
 

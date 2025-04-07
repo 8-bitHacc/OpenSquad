@@ -6,9 +6,9 @@ class LogicCharacterEntry(LogicReflectable):
 
     @classmethod
     def reflect(cls, reflector: LogicJSONOutReflector, player: PlayerInstance) -> None:
-        if reflector.reflectArray(len(player.UnlockedCharacters), "c", False) != 0:
+        if reflector.reflectArray(len(player.members), "c", False) != 0:
             reflector.currentArrayIndex = 0
-            for char in player.UnlockedCharacters:
+            for char in player.members:
                 cls.reflectCharacter(reflector, char)
             reflector.reflectExitArray()
 

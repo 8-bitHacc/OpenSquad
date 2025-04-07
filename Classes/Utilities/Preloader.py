@@ -1,21 +1,21 @@
 import json
 
 class Preloader:
-    ConfigurationData = None
-    offers = None
+    configuration: dict = None
+    offers: dict = None
 
     @classmethod
     def preloadAll(cls):
-        cls.ConfigurationData = json.loads(open("Classes/StaticData/Configuration.json", "r").read())
-        cls.offers = json.loads(open("Classes/StaticData/Offers.json", "r").read())
+        cls.configuration = json.loads(open("Classes/StaticData/configuration.json", "r").read())
+        cls.offers = json.loads(open("Classes/StaticData/offers.json", "r").read())
 
     @classmethod
     def preloadItem(cls, itemName=None):
         try:
             if itemName == "Configuration":
-                cls.ConfigurationData = json.loads(open("Classes/StaticData/Configuration.json", "r").read())
+                cls.configuration = json.loads(open("Classes/StaticData/configuration.json", "r").read())
             elif itemName == "Shop":
-                cls.offers = json.loads(open("Classes/StaticData/Offers.json", "r").read())
+                cls.offers = json.loads(open("Classes/StaticData/offers.json", "r").read())
             else:
                 raise FileNotFoundError
 
@@ -26,7 +26,7 @@ class Preloader:
     def deleteItemData(cls, itemName=None):
         try:
             if itemName == "Configuration":
-                cls.ConfigurationData = None
+                cls.configuration = None
             elif itemName == "Shop":
                 cls.offers = None
             else:
@@ -37,7 +37,7 @@ class Preloader:
     @classmethod
     def getItemData(cls, itemName):
         try:
-            if itemName == "Configuration": return cls.ConfigurationData
+            if itemName == "Configuration": return cls.configuration
             elif itemName == "Shop": return cls.offers
             else: raise FileNotFoundError
 
@@ -56,8 +56,8 @@ class Preloader:
     @classmethod
     def preloadFile(cls, path: str):
         valid = {
-            "Classes/StaticData/Configuration.json": "ConfigurationData",
-            "Classes/StaticData/Offers.json": "offers",
+            "Classes/StaticData/configuration.json": "configuration",
+            "Classes/StaticData/offers.json": "offers",
         }
 
         if path not in valid:

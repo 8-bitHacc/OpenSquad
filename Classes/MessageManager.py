@@ -17,6 +17,8 @@ class MessageManager:
                     self.connection.disconnect()
 
                 elif packet.isClientToServerMessage():
+                    print(
+                        f"[MessageManager::receiveMessage] Received message {packet.getMessageTypeName()} (type: {packet.getMessageType()})")
                     try:
                         packet.decode(self.receiverDict)
                     except:
@@ -28,6 +30,13 @@ class MessageManager:
 
             except:
                 traceback.print_exc()
+        else:
+            messageName: str | None = None
+            if LogicLaserMessageFactory.MessageExists(messageID): messageName = LogicLaserMessageFactory.getMessageName(
+                messageID)
+
+            print(
+                f"[MessageManager::receiveMessage] Received {''.join('unhandled' if messageName else 'unknown')} message {''.join(messageName) if messageName else ''} (type: {messageID})")
     
     def getReceiverDict(self) -> dict:
         return self.receiverDict
