@@ -14,7 +14,7 @@ class LogicRawOutReflector(LogicReflector):
         self.byteStream = None
 
     def reflectObject(self, objectName: str):
-        # NOTE: Everdale doesn't write enterObject in raw
+        # NOTE: Everdale doesn't write enterObject in raw, same story with squad
         #self.byteStream.writeInt8(102)
         pass
 
@@ -23,7 +23,7 @@ class LogicRawOutReflector(LogicReflector):
         if a3: self.reflectObject(objectName)
 
     def reflectExitObject(self):
-        # NOTE: for Everdale exitObject is not written??
+        # NOTE: for Everdale exitObject is not written?? same case goes for squad
         # self.byteStream.writeInt8(103)
         pass
 

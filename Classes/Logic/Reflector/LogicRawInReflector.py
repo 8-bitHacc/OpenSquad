@@ -53,7 +53,7 @@ class LogicRawInReflector(LogicReflector):
         return 1
 
     def reflectExitArray(self) -> bool:
-        # NOTE: Everdale doesn't read exitArray in raw
+        # NOTE: Everdale doesn't read exitArray in raw, empty in squad too
         # return self.byteStream.readInt8() == 105
         pass
 
@@ -78,7 +78,7 @@ class LogicRawInReflector(LogicReflector):
         else:
             pass
 
-    # TODO: Pss, do this!
+    # TODO: Pss, do this! hm why
 
 
     def reflectReflectablePointerBase(self, objectName: str, value: int):
