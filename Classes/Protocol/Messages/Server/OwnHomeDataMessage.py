@@ -21,16 +21,13 @@ class OwnHomeDataMessage(PiranhaMessage):
         self.writeLongLong(*receiver["Player"].accountID)
         self.writeInt(int(time.time()))
         # Constructs reflector and encodes reflectableArrays "w" and "dm"
-        base = b'\x02\xe7\x11\x89\xd4a\x92\xd4a\x95\xd4a\x96\xd4a\xae\xd4a\x80\xd4a\x81\xd4a\x82\xd4a\x83\xd4a\x84\xd4a\x87\xd4a\x90\xd4a\x93\xd4a\xa0\xd4a\x86\xd4a\x88\xd4a\xa6\xd4a\x04\xa9\xcb\xc9\x02\xa2\xcb\xc9\x02\xa0\xcb\xc9\x02\xa6\xcb\xc9\x02\x00\x00\x00\x17ds3_ExpLeagueGrasslands\x8a\xbe\x92\x01\xbf\xa7\xd6\xb9\x07\xa0\xeem\x11\x89\xd4a\x92\xd4a\x95\xd4a\x96\xd4a\xae\xd4a\x80\xd4a\x81\xd4a\x82\xd4a\x83\xd4a\x84\xd4a\x87\xd4a\x90\xd4a\x93\xd4a\xa0\xd4a\x86\xd4a\x88\xd4a\xa6\xd4a\x04\xa2\xcb\xc9\x02\xa6\xcb\xc9\x02\xa9\xcb\xc9\x02\xa0\xcb\xc9\x02\x00\x00\x00\x1ads1Duo_ExpLeagueGrasslands\x8e\xbe\x92\x01\xf0\xca\xd3\xdc\t\xa0\xeem'
-
-        self.payload += base
-        self.offset += base.__len__()
+        self.writeHexa("02 E7 11 89 D4 61 92 D4 61 95 D4 61 96 D4 61 AE D4 61 80 D4 61 81 D4 61 82 D4 61 83 D4 61 84 D4 61 87 D4 61 90 D4 61 93 D4 61 A0 D4 61 86 D4 61 88 D4 61 A6 D4 61 04 A9 CB C9 02 A2 CB C9 02 A0 CB C9 02 A6 CB C9 02 00 00 00 17 64 73 32 5F 45 78 70 4C 65 61 67 75 65 47 72 61 73 73 6C 61 6E 64 73 8B BE 92 01 94 C6 0A A0 EE 6D 11 89 D4 61 92 D4 61 95 D4 61 96 D4 61 AE D4 61 80 D4 61 81 D4 61 82 D4 61 83 D4 61 84 D4 61 87 D4 61 90 D4 61 93 D4 61 A0 D4 61 86 D4 61 88 D4 61 A6 D4 61 04 A9 CB C9 02 A2 CB C9 02 A0 CB C9 02 A6 CB C9 02 00 00 00 1A 64 73 31 44 75 6F 5F 45 78 70 4C 65 61 67 75 65 47 72 61 73 73 6C 61 6E 64 73 8F BE 92 01 94 C6 0A A0 EE 6D")
 
         self.writeBoolean(False)
         self.writeString(self.reflectJSON(receiver["Player"], receiver["ClientConnection"].serverSession.preloader.offers))
 
-        self.writeLongLong(0, 0)
-        self.writeLongLong(0, 1)
+        self.writeLongLong(*receiver["Player"].accountID)
+        self.writeLongLong(*receiver["Player"].accountID)
         # end of sub_852248
 
         if self.writeBoolean(True): # crashes if false
@@ -113,7 +110,7 @@ class OwnHomeDataMessage(PiranhaMessage):
         if reflected.reflectArray(0, "selEmos") != 0:
             reflected.reflectExitArray()
 
-        if reflected.reflectArray(1, "milestones") != 0:
+        if reflected.reflectArray(0, "milestones") != 0:
             reflected.reflectNextInt([4700000, 4700001, 4700002, 4700003, 4700004, 4700005, 4700006, 4700007, 4700008, 4700009, 4700010, 4700011, 4700012, 4700013, 4700014, 4700015, 4700016, 4700017, 4700018, 4700019, 4700020, 4700021, 4700022, 4700023, 4700024, 4700025, 4700026, 4700027, 4700028, 4700029, 4700030, 4700031, 4700032, 4700033, 4700034, 4700035, 4700036, 4700037, 4700038, 4700039, 4700040, 4700041, 4700042, 4700043, 4700044, 4700045, 4700046, 4700047, 4700048, 4700049, 4700050, 4700051, 4700052, 4700053, 4700054, 4700055, 4700056, 4700057, 4700058, 4700059, 4700060, 4700061, 4700062, 4700063, 4700064, 4700065, 4700066, 4700067, 4700068, 4700069, 4700070, 4700071, 4700072, 4700073, 4700074, 4700075, 4700076, 4700077, 4700078, 4700079, 4700080, 4700081, 4700082, 4700083, 4700084, 4700085, 4700086, 4700087, 4700088, 4700089, 4700090, 4700091, 4700092, 4700093, 4700094, 4700095, 4700096])
             reflected.reflectExitArray()
 

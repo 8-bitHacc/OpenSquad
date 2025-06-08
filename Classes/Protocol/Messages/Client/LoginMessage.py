@@ -33,15 +33,6 @@ class LoginMessage(PiranhaMessage):
         receiver["ClientConnection"].player = PlayerInstance()
         receiver["Player"] = receiver["ClientConnection"].player
 
-        print(self.accountToken)
-
-        if self.accountToken == "SquadBusters":
-            l = LoginFailedMessage()
-            l.setErrorCode(1)
-            l.setMessage("Please clear your App Data in order to play.")
-            receiver["ClientConnection"].messaging.send(receiver, l)
-            return
-
         if self.accountToken == "":
             entryID: list = self.incrementID(receiver["ClientConnection"].db.incrementID())
             receiver["ClientConnection"].db.currentID = entryID

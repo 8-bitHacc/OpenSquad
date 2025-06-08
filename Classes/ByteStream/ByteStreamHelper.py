@@ -9,7 +9,9 @@ class ByteStreamHelper:
     @staticmethod
     def decompress(byteStream):
         length = byteStream.readInt()
-        return zlib.decompress(byteStream.readBytes(length))
+        if length != 4294967295:
+            byteStream.readIntLittleEndian()
+            return zlib.decompress(byteStream.readBytes(length - 4))
     
     @staticmethod
     def encodeLogicLong(bytestream, high: int = -1, low: int = 0):

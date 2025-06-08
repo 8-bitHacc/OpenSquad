@@ -25,7 +25,6 @@ class ByteStream:
             if data.startswith('0x'):
                 data = data[2:]
             base = bytes.fromhex(''.join(data.split()).replace(' ', ''))
-            print(base)
             self.payload += base
             self.offset += len(base)
 

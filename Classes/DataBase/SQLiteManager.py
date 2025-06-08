@@ -64,5 +64,4 @@ class SQLiteManager:
                 HighID, LowID = self.cursor.fetchone()
                 return [HighID, LowID]
             except:
-                print('erro')
                 return [0, 1]

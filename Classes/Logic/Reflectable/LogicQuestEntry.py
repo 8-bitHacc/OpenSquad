@@ -24,5 +24,5 @@ class LogicQuestEntry:
         reflector.reflectInt(6300000 + quest["id"], "questData", 6300000)
         reflector.reflectInt(quest.get("progress", 0), "progress", 0)
         reflector.reflectBool(quest.get("seen", False), "seen", False)
-        #.reflectInt(0,) chroId won't be implemented as i don't know what it does
+        #.reflectInt(0,) chroId won't be implemented as I don't know what it does
         reflector.currentArrayIndex += 1

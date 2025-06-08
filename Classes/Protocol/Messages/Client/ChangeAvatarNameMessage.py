@@ -15,6 +15,7 @@ class ChangeAvatarNameMessage(PiranhaMessage):
         receiver["ClientConnection"].db.createEntry(receiver["Player"].accountToken,
                                                       receiver["Player"].createDataEntry())
         av = SetAvatarNameResponseMessage()
+        av.setAvatarName(self.name)
         receiver["ClientConnection"].messaging.send(receiver, av)
 
     def getMessageType(self):

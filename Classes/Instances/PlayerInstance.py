@@ -9,7 +9,7 @@ class PlayerInstance:
     # Main Player Items
     name: str | None = None
     registrationState: int = -1
-    expTokens: int = 199999999
+    expTokens: int = 0
     trophies: int = 0
     resources: list[dict[str, int]] = [
         {
@@ -40,7 +40,7 @@ class PlayerInstance:
     ]
     quests: list[dict[str, int]] = [{
         "id": 94,
-        "progress": 4
+        "progress": 4,
     }]
 
     def createDataEntry(self) -> dict:
@@ -56,4 +56,4 @@ class PlayerInstance:
         self.members = data.get("members", self.members)
         self.skins = data.get("skins", [])
         self.emotes = data.get("emotes", self.emotes)
-        self.quests = data.get("quests", [])
+        self.quests = data.get("quests", self.quests)

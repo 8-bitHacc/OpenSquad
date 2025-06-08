@@ -11,7 +11,8 @@ class LogicUnlockCharacterCommand(LogicCommand):
         raw.destruct()
 
     def execute(self, receiver):
-        receiver["Player"].UnlockedCharacters.append({"id": self.character})
+        receiver["Player"].members.append({"id": self.character})
+        receiver["ClientConnection"].db.updateEntry("members", receiver["Player"].members, receiver["Player"].accountToken)
 
     def getCommandType(self):
         return 531
