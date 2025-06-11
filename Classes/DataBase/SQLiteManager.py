@@ -1,5 +1,6 @@
 import sqlite3, json, traceback
 from threading import Lock
+from typing import Union
 
 class SQLiteManager:
     def __init__(self):
@@ -35,7 +36,7 @@ class SQLiteManager:
         finally:
             if acMutex: self.mutex.release()
 
-    def updateEntry(self, item: list[str] | str, value, auth: str = None, data: dict = None):
+    def updateEntry(self, item: Union[list[str], str], value, auth: str = None, data: dict = None):
         """Updates an entry on a specific item with the updated value and saves it into the database"""
         with self.mutex:
             try:
