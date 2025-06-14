@@ -5,7 +5,7 @@ from typing import Union
 class SQLiteManager:
     def __init__(self):
         """Creates an instance of SQLiteManager and prepares the database"""
-        self.connection: sqlite3.Connection = sqlite3.connect("Classes/DataBase/Entries/players.sqlite", check_same_thread=False)
+        self.connection: sqlite3.Connection = sqlite3.connect("Classes/DataBase/players.sqlite", check_same_thread=False)
         self.cursor: sqlite3.Cursor = self.connection.cursor()
         self.mutex: Lock = Lock()
         try:
