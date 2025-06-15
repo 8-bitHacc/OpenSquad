@@ -54,6 +54,6 @@ class PlayerInstance:
         self.trophies = data.get("trophies", 0)
         self.resources = data.get("resources", self.resources)
         self.members = data.get("members", self.members)
-        self.skins = data.get("skins", [])
+        self.skins = data.get("skins", self.skins)
         self.emotes = data.get("emotes", self.emotes)
         self.quests = data.get("quests", self.quests)
