@@ -39,12 +39,11 @@ class ClientHelloMessage(PiranhaMessage):
             l.setMessage(":)")
             receiver["ClientConnection"].messaging.send(receiver, l)
 
-        #elif self.major != self.settings["CurrentMajor"]:
-            #l = LoginFailedMessage()
-            #l.setErrorCode(8)
-            #l.setMessage("A new version of the private server is available!")
-            #l.setUpdateURL("https://mega.nz/file/m4c0nSyK#_YNLSBuGsO8sTjJ1Q6ANxCwPYXOMhdmXrzRtxlIMwKM")
-            #receiver["ClientConnection"].messaging.send(receiver, l)
+        elif self.major != self.settings["major"]:
+            l = LoginFailedMessage()
+            l.setErrorCode(8)
+            l.setUpdateURL(self.settings["updateUrl"])
+            receiver["ClientConnection"].messaging.send(receiver, l)
 
         #elif self.contentHash != self.settings["ContentHash"]:
             #l = LoginFailedMessage()
