@@ -28,9 +28,10 @@ class ClientHelloMessage(PiranhaMessage):
 
     def execute(self, receiver):
         self.settings = receiver["ClientConnection"].serverSession.preloader.configuration
-        if self.settings["maintenance"] != 0:
+        if self.settings["maintenance"] > 0:
             l = LoginFailedMessage()
             l.setErrorCode(10)
+            l.setMaintenanceTime(self.settings["maintenance"])
             receiver["ClientConnection"].messaging.send(receiver, l)
 
         elif not self.checkValidation():
